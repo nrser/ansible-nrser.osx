@@ -1,0 +1,23 @@
+---
+
+- name: Use plain text mode for new TextEdit documents
+  #
+  #     defaults write com.apple.TextEdit RichText -int 0
+  #
+  state:
+    defaults:
+      key: com.apple.TextEdit:RichText
+      set: 0
+  when: osx_text_edit_plain_text
+
+- name: Open and save files as UTF-8 in TextEdit
+  state:
+    defaults:
+    # defaults write com.apple.TextEdit PlainTextEncoding -int 4
+    - key: com.apple.TextEdit:PlainTextEncoding
+      set: 4
+
+    # defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
+    - key: com.apple.TextEdit:PlainTextEncodingForWrite
+      set: 4
+  when: osx_text_edit_utf_8

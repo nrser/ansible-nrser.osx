@@ -1,2 +1,225 @@
 ---
 # defaults file for nrser.osx
+# 
+# these variables control which tasks actually get run
+# 
+# everything here is turned off or not defined
+# they can then be customized through variables
+#
+# basically, turn things to 'on' here if they're off, or uncomment them
+# and set a setting if they're commented out.
+
+# general-ui-ux.yml
+# =================
+
+osx_disable_boot_sounds:                                  off
+osx_disable_ui_sounds:                                    off
+osx_hide_time_machine_in_menu_bar:                        off
+osx_always_show_scroll_bars:                              off
+osx_increase_cocoa_window_resize_speed:                   off
+osx_expand_save_panel:                                    off
+osx_expand_print_panel:                                   off
+osx_default_save_to_disk:                                 off
+osx_quit_print_app_when_finished:                         off
+osx_disable_app_quarantine:                               off
+osx_control_characters_as_carets:                         off
+osx_disable_resume:                                       off
+osx_disable_app_auto_terminate:                           off
+osx_disable_crash_reporter:                               off
+osx_non_floating_help_windows:                            off
+osx_host_info_in_login_window:                            off
+osx_daily_udpate_check:                                   off
+osx_disable_notif_center:                                 off
+osx_disable_smart_quotes:                                 off
+osx_disable_smart_dashes:                                 off
+# osx_menu_bar_date_format:                                 EEE MMM d  HH:mm
+
+# ssd.yml
+# =======
+
+osx_disable_time_machine:                                 off
+
+# input.yml
+# =========
+
+osx_trackpad_click_to_tap:                                off
+osx_better_bluetooth_audio:                               off
+osx_full_keyboard_access:                                 off
+# osx_languages:
+# - en
+# - zh-Hans
+# - zh-Hant
+# osx_locale:                                               en_US@currency=USD
+# osx_units:                                                Centimeters
+# osx_metric:                                               true
+osx_itunes_ignore_media_keys:                             off
+osx_simplified_pinyin:                                    off
+
+# screen.yml
+# ==========
+
+# osx_password_after_screen_saver:                          true
+# osx_password_delay:                                       5.0 # float in seconds
+# osx_screen_shots_dir:                                     "{{ lookup('env','HOME') }}/temp/screen-shots"
+# osx_screen_shot_format:                                   png
+osx_disable_shadows_in_screen_shots:                      off
+osx_subpixel_fonts:                                       off
+osx_enable_hidpi:                                         off
+# osx_screen_saver_delay:                                   300 # integer in seconds
+
+# finder.yml
+# ==========
+
+osx_finder_disable_animations:                            off
+osx_finder_default_to_home:                               off
+osx_finder_no_drives_on_desktop:                          off
+osx_finder_show_hidden_files:                             off
+osx_finder_show_file_extensions:                          off
+osx_finder_show_status_bar:                               off
+osx_finder_show_path_bar:                                 off
+osx_finder_selection_in_quick_look:                       off
+osx_finder_posix_path_as_title:                           off
+osx_finder_default_search_to_current_folder:              off
+osx_finder_disable_change_extension_warning:              off
+osx_finder_spring_load_dirs:                              off
+# osx_finder_spring_load_delay:                             0.5 # seconds as float
+osx_finder_no_ds_store_on_network_volumes:                off
+osx_finder_info_in_icon_views:                            off
+osx_finder_desktop_info_on_right:                         off
+osx_finder_icon_snap_to_grid:                             off
+# osx_finder_icon_spacing:                                  54 # integer
+# osx_finder_icon_size:                                     64 # integer
+osx_finder_list_view_default:                             off
+osx_finder_diable_empty_trash_warning:                    off
+osx_finder_show_user_library:                             off
+osx_finder_expand_file_info:                              off
+
+# dock-dashboard-hot-corners.yml
+# ==============================
+
+# osx_dock_hover_effect_in_grids:                            true # boolean
+# osx_dock_icon_size:                                       24 # integer
+# osx_dock_effect:                                          scale
+# osx_dock_min_to_app_icon:                                 true # boolean
+# osx_dock_spring_load_all:                                 true # boolean
+# osx_dock_app_indicator_lights:                            true # boolean
+# osx_dock_animate_opening_apps:                            false # boolean
+osx_dock_speed_up_mission_control:                        off
+# osx_dashboard_enabled:                                    true # boolean
+# osx_dashboard_as_space:                                   false # boolean
+# osx_dashboard_dev_mode:                                   false # boolean
+# osx_rearrange_spaces_by_use:                              false # boolean
+# osx_dock_autohide:                                        false # boolean
+# osx_dock_hidden_apps_translucent:                         true # boolean
+osx_disable_launchpad_gesture:                            off
+
+# safari-webkit.yml
+# =================
+
+# osx_safari_full_url_in_addr_bar:                          true # boolean
+# osx_safari_home_page:                                     "about:blank" # string
+# osx_safari_auto_open_safe_files:                          false # boolean
+# osx_safari_backspace_back:                                false # boolean
+# osx_safari_show_favs_bar:                                 false # boolean
+osx_safari_disable_hist_top_sites_thumbs:                 off
+# osx_safari_enable_debug_menu:                             true # boolean
+osx_safari_remove_useless_bookmark_icons:                 off
+# osx_safari_dev_and_inspector_menus:                       true # boolean
+# osx_safari_inspector_context_menu:                        true # boolean
+
+# mail.yml
+# ========
+
+# i don't use mail
+
+# spotlight.yml
+# =============
+
+osx_spotlight_disable_new_vol_auto_index:                 off
+# this is how it was set on mba2... looks like i used mths' settings
+# at some past point then enabled fonts
+# osx_spotlight_index_order:
+# - name:     APPLICATIONS
+#   enabled:  1
+# - name:     SYSTEM_PREFS
+#   enabled:  1
+# - name:     DIRECTORIES
+#   enabled:  1
+# - name:     PDF
+#   enabled:  1
+# - name:     FONTS
+#   enabled:  1
+# - name:     DOCUMENTS
+#   enabled:  0
+# - name:     MESSAGES
+#   enabled:  0
+# - name:     CONTACT
+#   enabled:  0
+# - name:     EVENT_TODO
+#   enabled:  0
+# - name:     IMAGES
+#   enabled:  0
+# - name:     BOOKMARKS
+#   enabled:  0
+# - name:     MUSIC
+#   enabled:  0
+# - name:     MOVIES
+#   enabled:  0
+# - name:     PRESENTATIONS
+#   enabled:  0
+# - name:     SPREADSHEETS
+#   enabled:  0
+# - name:     SOURCE
+#   enabled:  0
+# - name:     MENU_DEFINITION
+#   enabled:  0
+# - name:     MENU_OTHER
+#   enabled:  0
+# - name:     MENU_CONVERSION
+#   enabled:  0
+# - name:     MENU_EXPRESSION
+#   enabled:  0
+# - name:     MENU_WEBSEARCH
+#   enabled:  0
+# - name:     MENU_SPOTLIGHT_SUGGESTIONS
+#   enabled:  0
+
+# terminal.yml
+# ============
+
+osx_terminal_utf_8_only:                                  off
+
+# time-machine.yml
+# ================
+
+# osx_time_machine_prompt_on_new_drives:                    false # bool
+# osx_time_machine_local_backups:                           false # bool
+
+
+# text-edit.yml
+# =============
+
+osx_text_edit_plain_text:                                 off
+osx_text_edit_utf_8:                                      off
+
+# disk-utility.yml
+# ================
+
+# osx_disk_utility_debug_menu:                              true # boolean
+
+# app-store.yml
+# =============
+
+# osx_app_store_dev_tools:                                  true # boolean
+# osx_app_store_debug_menu:                                 true # boolean
+
+# messages.yml
+# ============
+
+# not using any of this
+
+# ssh.yml
+# =======
+
+# osx_ssh_enable_sshd:                                      true # boolean
+# osx_ssh_ssh_copy_id:                                      present # homebrew state

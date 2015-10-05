@@ -1,0 +1,78 @@
+---
+###############################################################################
+# Screen                                                                      #
+###############################################################################
+
+- name: require password after screen saver
+  state:
+    defaults:
+      # defaults write com.apple.screensaver askForPassword -int 1
+      key: com.apple.screensaver:askForPassword
+      set: "{{ osx_password_after_screen_saver|int }}"
+  when: osx_password_after_screen_saver is defined
+
+- name: Require password 5 seconds after sleep or screen saver begins
+  state:
+    defaults:
+      # defaults write com.apple.screensaver askForPasswordDelay -int 5
+      key: com.apple.screensaver:askForPasswordDelay
+      set: "{{ osx_password_delay|float }}"
+  when: osx_password_delay is defined
+
+- name: create ~/temp/screen-shots directory
+  file:
+    path: "{{ osx_screen_shots_dir }}"
+    state: directory
+  when: osx_screen_shots_dir is defined
+
+- name: Save screenshots to ~/temp/screen-shots
+  state:
+    defaults:
+    # defaults write com.apple.screencapture location -string "${HOME}/temp/screen-shots"
+      key: com.apple.screencapture:location
+      set: "{{ osx_screen_shots_dir }}"
+  when: osx_screen_shots_dir is defined
+
+- name: "Save screenshots in PNG format (other options: BMP, GIF, JPG, PDF, TIFF)"
+  state:
+    defaults:
+      # defaults write com.apple.screencapture type -string "png"
+      key: com.apple.screencapture:type
+      set: "{{ osx_screen_shot_format }}"
+  when: osx_screen_shot_format is defined
+
+- name: Disable shadow in screenshots
+  state:
+    defaults:
+      # defaults write com.apple.screencapture disable-shadow -bool true
+      key: com.apple.screencapture:disable-shadow
+      set: true
+  when: osx_disable_shadows_in_screen_shots
+
+- name: Enable subpixel font rendering on non-Apple LCDs
+  state:
+    defaults:
+      # defaults write NSGlobalDomain AppleFontSmoothing -int 2
+      key: NSGlobalDomain:AppleFontSmoothing
+      set: 2
+  when: osx_subpixel_fonts
+
+- name: Enable HiDPI display modes (requires restart)
+  sudo: true
+  state:
+    defaults:
+      # sudo defaults write /Library/Preferences/com.apple.windowserver DisplayResolutionEnabled -bool true
+      key: /Library/Preferences/com.apple.windowserver:DisplayResolutionEnabled
+      set: true
+  notify:
+  - requires restart
+  when: osx_enable_hidpi
+
+- name: start screen saver after 5 minutes
+  state:
+    defaults:
+      key: com.apple.screensaver:idleTime
+      set: "{{ osx_screen_saver_delay|int }}"
+      options:
+        current_host: true
+  when: osx_screen_saver_delay is defined

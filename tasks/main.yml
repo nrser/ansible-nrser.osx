@@ -1,2 +1,66 @@
 ---
 # tasks file for nrser.osx
+
+- include: general-ui-ux.yml
+  tags:
+  - osx-ui-ux
+
+- include: ssd.yml
+  tags:
+  - osx-ssd
+
+- include: input.yml
+  tags:
+  - osx-input
+
+- include: screen.yml
+  tags:
+  - osx-screen
+
+- include: finder.yml
+  tags:
+  - osx-finder
+
+- include: dock-dashboard-hot-corners.yml
+  tags:
+  - osx-ddhc
+
+- include: safari-webkit.yml
+  tags:
+  - osx-safari
+
+- include: mail.yml
+  tags:
+  - osx-mail
+
+- include: spotlight.yml
+  tags:
+  - osx-spotlight
+
+- include: terminal.yml
+  tags:
+  - osx-term
+
+- include: time-machine.yml
+  tags:
+  - osx-time-machine
+
+- include: text-edit.yml
+  tags:
+  - dock-text-edit
+
+- include: disk-utility.yml
+  tags:
+  - osx-disk-util
+
+- include: app-store.yml
+  tags:
+  - osx-app-store
+
+- include: messages.yml
+  tags:
+  - osx-messages
+
+- include: ssh.yml
+  tags:
+  - osx-ssh

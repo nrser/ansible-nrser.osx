@@ -1,0 +1,175 @@
+---
+###############################################################################
+# Dock, Dashboard, and hot corners                                            #
+###############################################################################
+
+- name: set highlight hover effect for the grid view of a stack (Dock)
+  state:
+    defaults:
+      # defaults write com.apple.dock mouse-over-hilite-stack -bool true
+      # 
+      # not sure exactly what this is...
+      key: com.apple.dock:mouse-over-hilite-stack
+      set: "{{ osx_hover_effect_in_dock_grids|bool }}"
+  when: osx_dock_hover_effect_in_grids is defined
+
+- name: Set the icon size of Dock items
+  state:
+    defaults:
+      # defaults write com.apple.dock tilesize -int 36
+      key: com.apple.dock:tilesize
+      set: "{{ osx_dock_icon_size|int }}"
+  when: osx_dock_icon_size is defined
+
+- name: set minimize/maximize window effect
+  state:
+    defaults:
+      # defaults write com.apple.dock mineffect -string "scale"
+      key: com.apple.dock:mineffect
+      set: "{{ osx_dock_effect }}" 
+  when: osx_dock_effect is defined
+
+- name: set window minimize style
+  state:
+    defaults:
+      # defaults write com.apple.dock minimize-to-application -bool true
+      key: com.apple.dock:minimize-to-application
+      set: "{{ osx_min_to_app_icon|bool }}"
+  when: osx_dock_min_to_app_icon is defined
+
+- name: set spring loading for all Dock items
+  state:
+    defaults:
+      # defaults write com.apple.dock enable-spring-load-actions-on-all-items -bool true
+      key: com.apple.dock:enable-spring-load-actions-on-all-items
+      set: "{{ osx_dock_spring_load_all|bool }}"
+  when: osx_dock_spring_load_all is defined
+
+- name: set indicator lights for open applications in the Dock
+  state:
+    defaults:
+      # defaults write com.apple.dock show-process-indicators -bool true
+      key: com.apple.dock:show-process-indicators
+      set: "{{ osx_dock_app_indicator_lights|bool }}"
+  when: osx_dock_app_indicator_lights is defined
+
+- name: set Dock open apps animation
+  state:
+    defaults:
+      # defaults write com.apple.dock launchanim -bool false
+      key: com.apple.dock:launchanim
+      set: "{{ osx_dock_animate_opening_apps|bool }}"
+  when: osx_dock_animate_opening_apps is defined
+
+- name: Speed up Mission Control animations
+  state:
+    defaults:
+      # defaults write com.apple.dock expose-animation-duration -float 0.1
+      key: com.apple.dock:expose-animation-duration
+      set: 0.1
+  when: osx_dock_speed_up_mission_control
+
+# Don’t group windows by application in Mission Control
+# (i.e. use the old Exposé behavior instead)
+# defaults write com.apple.dock expose-group-by-app -bool false
+# 
+# TODO: not sure what this is
+
+- name: enable Dashboard
+  state:
+    defaults:
+      key: com.apple.dashboard:mcx-disabled
+      unset:
+  notify: restart dock
+  when: (osx_dashboard_enabled is defined) and (osx_dashboard_enabled)
+
+- name: disable Dashboard
+  state:
+    defaults:
+      key: com.apple.dashboard:mcx-disabled
+      set: true
+  notify: restart dock
+  when: (osx_dashboard_enabled is defined) and (not osx_dashboard_enabled)
+
+- name: set Dashboard as a Space
+  state:
+    defaults:
+      key: com.apple.dock:dashboard-in-overlay
+      set: "{{ (not osx_dashboard_as_space)|bool }}"
+  when: osx_dashboard_as_space is defined
+
+- name: set Dashboard dev mode (allows keeping widgets on the desktop)
+  state:
+    defaults:
+      # defaults write com.apple.dashboard devmode -bool true
+      key: com.apple.dashboard:devmode
+      set: "{{ osx_dashboard_dev_mode|bool }}"
+  when: osx_dashboard_dev_mode is defined
+
+- name: set automatically rearrange Spaces based on most recent use
+  state:
+    defaults:
+      key: com.apple.dock:mru-spaces
+      set: "{{ osx_rearrange_spaces_by_use|bool }}"
+  when: osx_rearrange_spaces_by_use is defined
+
+# # Remove the auto-hiding Dock delay
+# defaults write com.apple.dock autohide-delay -float 0
+# # Remove the animation when hiding/showing the Dock
+# defaults write com.apple.dock autohide-time-modifier -float 0
+
+- name: set dock autohide
+  state:
+    defaults:
+      key: com.apple.dock:autohide
+      set: "{{ osx_dock_autohide|bool }}"
+  notify: restart dock
+  when: osx_dock_autohide is defined
+
+- name: set Dock icons of hidden applications translucent
+  state:
+    defaults:
+      key: com.apple.dock:showhidden
+      set: "{{ osx_dock_hidden_apps_translucent|bool }}"
+  when: osx_dock_hidden_apps_translucent is defined
+
+- name: Disable the Launchpad gesture (pinch with thumb and three fingers)
+  state:
+    defaults:
+      key: com.apple.dock:showLaunchpadGestureEnabled
+      set: 0
+  when: osx_disable_launchpad_gesture
+
+# # Reset Launchpad, but keep the desktop wallpaper intact
+# find "${HOME}/Library/Application Support/Dock" -name "*-*.db" -maxdepth 1 -delete
+
+# # Add iOS Simulator to Launchpad
+# sudo ln -sf "/Applications/Xcode.app/Contents/Developer/Applications/iOS Simulator.app" "/Applications/iOS Simulator.app"
+
+# # Add a spacer to the left side of the Dock (where the applications are)
+# #defaults write com.apple.dock persistent-apps -array-add '{tile-data={}; tile-type="spacer-tile";}'
+# # Add a spacer to the right side of the Dock (where the Trash is)
+# #defaults write com.apple.dock persistent-others -array-add '{tile-data={}; tile-type="spacer-tile";}'
+
+# # Hot corners
+# # Possible values:
+# #  0: no-op
+# #  2: Mission Control
+# #  3: Show application windows
+# #  4: Desktop
+# #  5: Start screen saver
+# #  6: Disable screen saver
+# #  7: Dashboard
+# # 10: Put display to sleep
+# # 11: Launchpad
+# # 12: Notification Center
+# # Top left screen corner → Mission Control
+# defaults write com.apple.dock wvous-tl-corner -int 2
+# defaults write com.apple.dock wvous-tl-modifier -int 0
+# # Top right screen corner → Desktop
+# defaults write com.apple.dock wvous-tr-corner -int 4
+# defaults write com.apple.dock wvous-tr-modifier -int 0
+# # Bottom left screen corner → Start screen saver
+# defaults write com.apple.dock wvous-bl-corner -int 5
+# defaults write com.apple.dock wvous-bl-modifier -int 0
+

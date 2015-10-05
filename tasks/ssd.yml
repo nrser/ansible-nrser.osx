@@ -1,0 +1,42 @@
+---
+###############################################################################
+# SSD-specific tweaks                                                         #
+###############################################################################
+
+- name: Disable local Time Machine snapshots
+  # 
+  #     sudo tmutil disablelocal
+  #
+  state:
+    time_machine:
+      key: local_backups
+      set: false
+  sudo: true
+  when: osx_disable_time_machine
+
+# Disable hibernation (speeds up entering sleep mode)
+# 
+#     sudo pmset -a hibernatemode 0
+# 
+# this is kinda complicated:
+#   <http://etherealmind.com/osx-hibernate-mode/>
+
+# Remove the sleep image file to save disk space
+#
+#     sudo rm /Private/var/vm/sleepimage
+# 
+# Create a zero-byte file instead…
+# 
+#     sudo touch /Private/var/vm/sleepimage
+# 
+# …and make sure it can’t be rewritten
+# 
+#     sudo chflags uchg /Private/var/vm/sleepimage
+#
+
+# Disable the sudden motion sensor as it’s not useful for SSDs
+# 
+#     sudo pmset -a sms 0
+# 
+# this setting doesn't even seem to be there on my machines...
+# might be an out of date change

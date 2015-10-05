@@ -1,0 +1,18 @@
+---
+###############################################################################
+# Mac App Store                                                               #
+###############################################################################
+
+- name: Enable the WebKit Developer Tools in the Mac App Store
+  state:
+    defaults:
+      key: com.apple.appstore:WebKitDeveloperExtras
+      set: "{{ osx_app_store_dev_tools|bool }}"
+  when: osx_app_store_dev_tools is defined
+
+- name: Enable Debug Menu in the Mac App Store
+  state:
+    defaults:
+      key: com.apple.appstore:ShowDebugMenu
+      set: "{{ osx_app_store_debug_menu|bool }}"
+  when: osx_app_store_debug_menu is defined

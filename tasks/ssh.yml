@@ -1,0 +1,16 @@
+---
+- name: enable sshd
+  sudo: true
+  state:
+    launchd:
+      key:
+      - /System/Library/LaunchDaemons/ssh.plist
+      - Disabled
+      set: "{{ not (osx_ssh_enable_sshd|bool) }}"
+  when: osx_ssh_enable_sshd is defined
+
+- name: install ssh-copy-id
+  when: osx_ssh_ssh_copy_id is defined
+  homebrew:
+    name: ssh-copy-id
+    state: "{{ osx_ssh_ssh_copy_id }}"

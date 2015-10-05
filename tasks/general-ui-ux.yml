@@ -1,0 +1,329 @@
+---
+###############################################################################
+# General UI/UX                                                               #
+###############################################################################
+
+# Set computer name (as done via System Preferences → Sharing)
+#
+#     #sudo scutil --set ComputerName "0x6D746873"
+#     #sudo scutil --set HostName "0x6D746873"
+#     #sudo scutil --set LocalHostName "0x6D746873"
+#     #sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "0x6D746873"
+
+# Set standby delay
+#
+# default for my Air is 4200 seconds = 70 minutes
+# Mathias had it at 86400 seconds = 24 hours
+#
+# exmplanied a little bit here:
+#
+# <http://osxdaily.com/2013/01/21/mac-slow-wake-from-sleep-fix/>
+#
+#     sudo pmset -a standbydelay 86400
+
+# Disable the sound effects on boot
+
+
+# - name: read boot sound effects volume
+#   shell: nvram SystemAudioVolume
+#   register: system_audio_volume
+
+# - name: Disable the sound effects on boot
+#   command: nvram SystemAudioVolume='%80'
+#   sudo: yes
+#   when: (system_audio_volume.stdout | search('SystemAudioVolume\\t%80')) == false
+
+- name: Disable the sound effects on boot
+  # 
+  #     sudo nvram SystemAudioVolume=" "
+  # 
+  # NOTE: seems to 'stick' much better if you use '%80' rather than ' '
+  state:
+    nvram:
+      key: SystemAudioVolume
+      set: '%80'
+  sudo: true
+  when: osx_disable_boot_sounds
+
+- name: disable UI sounds
+  state:
+    defaults:
+      key: com.apple.systemsound:com.apple.sound.uiaudio.enabled
+      set: 0
+  when: osx_disable_ui_sounds
+
+# Disable transparency in the menu bar and elsewhere on Yosemite
+# 
+#     defaults write com.apple.universalaccess reduceTransparency -bool true
+
+- name: hide the Time Machine icon in menu bar (by host)
+  #
+  #     for domain in ~/Library/Preferences/ByHost/com.apple.systemuiserver.*; do
+  #       defaults write "${domain}" dontAutoLoad -array \
+  #         "/System/Library/CoreServices/Menu Extras/TimeMachine.menu" \
+  #         "/System/Library/CoreServices/Menu Extras/Volume.menu" \
+  #         "/System/Library/CoreServices/Menu Extras/User.menu"
+  #     done
+  #
+  # TODO: does this work? require logout? restrting SystemUIServer doesn't
+  #       seem to help
+  state:
+    defaults:
+      key: "{{ item }}:dontAutoLoad"
+      array_contains: "/System/Library/CoreServices/Menu Extras/TimeMachine.menu"
+  with_fileglob: ~/Library/Preferences/ByHost/com.apple.systemuiserver.*
+  # notify:
+  # - restart SystemUIServer
+  when: osx_hide_time_machine_in_menu_bar
+
+- name: hide the Time Machine icon in menu bar (global)
+  #     defaults write com.apple.systemuiserver menuExtras -array \
+  #       "/System/Library/CoreServices/Menu Extras/Bluetooth.menu" \
+  #       "/System/Library/CoreServices/Menu Extras/AirPort.menu" \
+  #       "/System/Library/CoreServices/Menu Extras/Battery.menu" \
+  #       "/System/Library/CoreServices/Menu Extras/Clock.menu"
+  state:
+    defaults:
+      key: com.apple.systemuiserver:menuExtras
+      array_missing: "/System/Library/CoreServices/Menu Extras/TimeMachine.menu"
+  # notify:
+  # - restart SystemUIServer
+  when: osx_hide_time_machine_in_menu_bar
+
+# Set highlight color to green
+#
+#     defaults write NSGlobalDomain AppleHighlightColor -string "0.764700 0.976500 0.568600"
+
+# Set sidebar icon size to medium
+#
+#     defaults write NSGlobalDomain NSTableViewDefaultSizeMode -int 2
+
+- name: Always show scrollbars
+  #
+  #     defaults write NSGlobalDomain AppleShowScrollBars -string "Always"
+  #
+  # Possible values: `WhenScrolling`, `Automatic` and `Always`
+  state:
+    defaults:
+      key: NSGlobalDomain:AppleShowScrollBars
+      set: Always
+  when: osx_always_show_scroll_bars
+
+# Disable smooth scrolling
+# (Uncomment if you’re on an older Mac that messes up the animation)
+# 
+#     #defaults write NSGlobalDomain NSScrollAnimationEnabled -bool false
+
+- name: Increase window resize speed for Cocoa applications
+  #
+  #     defaults write NSGlobalDomain NSWindowResizeTime -float 0.001
+  #
+  state:
+    defaults:
+      key: NSGlobalDomain:NSWindowResizeTime
+      set: 0.001
+  when: osx_increase_cocoa_window_resize_speed
+
+- name: Expand save panel by default
+  #
+  #     defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
+  #     defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
+  #
+  state:
+    defaults:
+    - key: NSGlobalDomain:NSNavPanelExpandedStateForSaveMode
+      set: true
+    - key: NSGlobalDomain:NSNavPanelExpandedStateForSaveMode2
+      set: true
+  when: osx_expand_save_panel
+
+- name: Expand print panel by default
+  # 
+  #     defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
+  #     defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true
+  #
+  state:
+    defaults:
+    - key: NSGlobalDomain:PMPrintingExpandedStateForPrint
+      set: true
+    - key: NSGlobalDomain:PMPrintingExpandedStateForPrint2
+      set: true
+  when: osx_expand_print_panel
+
+- name: Save to disk (not to iCloud) by default
+  #
+  #     defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
+  #
+  state:
+    defaults:
+      key: NSGlobalDomain:NSDocumentSaveNewDocumentsToCloud
+      set: false
+  when: osx_default_save_to_disk
+
+- name: Automatically quit printer app once the print jobs complete
+  # 
+  #     defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
+  #
+  state:
+    defaults:
+      key: com.apple.print.PrintingPrefs:Quit When Finished
+      set: true
+  when: osx_quit_print_app_when_finished
+
+- name: Disable the “Are you sure you want to open this application?” dialog
+  # 
+  #     defaults write com.apple.LaunchServices LSQuarantine -bool false
+  #
+  state:
+    defaults:
+      key: com.apple.LaunchServices:LSQuarantine
+      set: false
+  when: osx_disable_app_quarantine
+
+# Remove duplicates in the “Open With” menu (also see `lscleanup` alias)
+# 
+#     /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user
+# 
+# not sure about this, skipping for now
+
+- name: Display ASCII control characters using caret notation in standard text views
+  # Try e.g. `cd /tmp; unidecode "\x{0000}" > cc.txt; open -e cc.txt`
+  #
+  #     defaults write NSGlobalDomain NSTextShowsControlCharacters -bool true
+  # 
+  state:
+    defaults:
+      key: NSGlobalDomain:NSTextShowsControlCharacters
+      set: true
+  when: osx_control_characters_as_carets
+
+- name: Disable Resume system-wide
+  # 
+  #     defaults write com.apple.systempreferences NSQuitAlwaysKeepsWindows -bool false
+  # 
+  state:
+    defaults:
+      key: com.apple.systempreferences:NSQuitAlwaysKeepsWindows
+      set: false
+  when: osx_disable_resume
+
+- name: Disable automatic termination of inactive apps
+  state:
+    defaults:
+      key: NSGlobalDomain:NSDisableAutomaticTermination
+      set: true
+  when: osx_disable_app_auto_terminate
+
+# WARNING: untested
+- name: Disable the crash reporter
+  # 
+  #     defaults write com.apple.CrashReporter DialogType -string "none"
+  # 
+  state:
+    defaults:
+      key: com.apple.CrashReporter:DialogType
+      set: none
+  when: osx_disable_crash_reporter
+
+# WARNING: untested
+- name: Set Help Viewer windows to non-floating mode
+  # 
+  #     defaults write com.apple.helpviewer DevMode -bool true
+  #
+  state:
+    defaults:
+      key: com.apple.helpviewer:DevMode
+      set: true
+  when: osx_non_floating_help_windows
+
+# Fix for the ancient UTF-8 bug in QuickLook (https://mths.be/bbo)
+# Commented out, as this is known to cause problems in various Adobe apps :(
+# See https://github.com/mathiasbynens/dotfiles/issues/237
+# 
+#     #echo "0x08000100:0" > ~/.CFUserTextEncoding
+#
+# i don't think i want problems in my adobe apps
+
+# WARNING: untested
+- name: host info when clicking the clock in login window
+  # 
+  #     sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
+  #
+  state:
+    defaults:
+      key: /Library/Preferences/com.apple.loginwindow:AdminHostInfo
+      set: HostName
+  sudo: true
+  when: osx_host_info_in_login_window
+
+# Restart automatically if the computer freezes
+# 
+#     sudo systemsetup -setrestartfreeze on
+#
+# this seems like a server setting, to try and bring it back up if it freezes
+# TODO: should be on for servers
+
+# Never go into computer sleep mode
+# 
+#     sudo systemsetup -setcomputersleep Off > /dev/null
+#
+# not totally familiar with why you would do this
+
+- name: Check for software updates daily, not just once per week
+  # 
+  #     defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
+  # 
+  state:
+    defaults:
+      key: com.apple.SoftwareUpdate:ScheduleFrequency
+      set: 1
+  when: osx_daily_udpate_check
+
+- name: Disable Notification Center and remove the menu bar icon
+  # 
+  #     launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist 2> /dev/null
+  #
+  # command: launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist
+  state:
+    launchd:
+      key:
+      - /System/Library/LaunchAgents/com.apple.notificationcenterui.plist
+      - Disabled
+      set: true
+  when: osx_disable_notif_center
+
+- name: Disable smart quotes as they’re annoying when typing code
+  # 
+  #     defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+  # 
+  state:
+    defaults:
+      key: NSGlobalDomain:NSAutomaticQuoteSubstitutionEnabled
+      set: false
+  when: osx_disable_smart_quotes
+
+- name: Disable smart dashes as they’re annoying when typing code
+  # 
+  #     defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+  #
+  state:
+    defaults:
+      key: NSGlobalDomain:NSAutomaticDashSubstitutionEnabled
+      set: false
+  when: osx_disable_smart_dashes
+
+# Set a custom wallpaper image. `DefaultDesktop.jpg` is already a symlink, and
+# all wallpapers are in `/Library/Desktop Pictures/`. The default is `Wave.jpg`.
+# 
+#     rm -rf ~/Library/Application Support/Dock/desktoppicture.db
+#     sudo rm -rf /System/Library/CoreServices/DefaultDesktop.jpg
+#     sudo ln -s /path/to/your/image /System/Library/CoreServices/DefaultDesktop.jpg
+
+- name: format date and time on menu bar
+  state:
+    defaults:
+      key: com.apple.menuextra.clock:DateFormat
+      set: "{{ osx_menu_bar_date_format }}"
+  notify:
+  - restart SystemUIServer
+  when: osx_menu_bar_date_format is defined

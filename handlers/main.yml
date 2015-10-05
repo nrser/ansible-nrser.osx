@@ -1,2 +1,35 @@
 ---
 # handlers file for nrser.osx
+
+- name: restart SystemUIServer
+  shell: killall SystemUIServer
+
+- name: restart Finder
+  shell: killall Finder
+
+- name: require logout/login
+  debug:
+    msg: "NOTICE: logout/login required to see changes"
+
+- name: require restart
+  debug:
+    msg: "NOTICE: requires restart to see changes"
+
+- name: restart dock
+  shell: killall -HUP Dock
+
+# spotlight
+
+# Load new settings before rebuilding the index
+# killall mds > /dev/null 2>&1
+- name: restart mds (metadata server)
+  command: killall mds
+
+# Make sure indexing is enabled for the main volume
+# sudo mdutil -i on / > /dev/null
+
+# Rebuild the index from scratch
+# sudo mdutil -E / > /dev/null
+- name: rebuild spotlight index
+  sudo: true
+  command: mdutil -E /

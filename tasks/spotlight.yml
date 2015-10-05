@@ -1,0 +1,32 @@
+---
+###############################################################################
+# Spotlight                                                                   #
+###############################################################################
+
+# i don't really use spotlight, so not paying too much attention to the stuff
+# here...
+
+# Hide Spotlight tray-icon (and subsequent helper)
+#sudo chmod 600 /System/Library/CoreServices/Search.bundle/Contents/MacOS/Search
+
+- name: >
+    Disable Spotlight indexing for any volume that gets mounted and has not
+    yet been indexed before.
+
+  # assuming this 
+  # note: Use `sudo mdutil -i off "/Volumes/foo"` to stop indexing any volume.
+  sudo: true
+  state:
+    defaults:
+      key:
+      - /.Spotlight-V100/VolumeConfiguration
+      - Exclusions
+      array_contains: /Volumes
+  when: osx_spotlight_disable_new_vol_auto_index
+
+- name: Change indexing order and disable some search results
+  when: osx_spotlight_index_order is defined
+  state:
+    defaults:
+      key: com.apple.spotlight:orderedItems
+      set: "{{ osx_spotlight_index_order }}"

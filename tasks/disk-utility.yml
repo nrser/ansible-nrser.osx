@@ -1,0 +1,10 @@
+---
+# why the hell not i guess...
+- name: Enable the debug menu in Disk Utility
+  state:
+    defaults:
+    - key: com.apple.DiskUtility:DUDebugMenuEnabled
+      set: "{{ osx_disk_utility_debug_menu|bool }}"
+    - key: com.apple.DiskUtility:advanced-image-options
+      set: "{{ osx_disk_utility_debug_menu|bool }}"
+  when: osx_disk_utility_debug_menu is defined
