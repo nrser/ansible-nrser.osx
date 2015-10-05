@@ -81,7 +81,7 @@
       #     defaults write NSGlobalDomain AppleLanguages -array "en" "nl"
       # 
       key: NSGlobalDomain:AppleLanguages
-      set: "{{ osx_languages }"
+      set: "{{ osx_languages }}"
   when: osx_languages is defined
 
 - name: set locale
