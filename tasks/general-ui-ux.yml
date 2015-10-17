@@ -3,12 +3,24 @@
 # General UI/UX                                                               #
 ###############################################################################
 
-# Set computer name (as done via System Preferences → Sharing)
-#
-#     #sudo scutil --set ComputerName "0x6D746873"
-#     #sudo scutil --set HostName "0x6D746873"
-#     #sudo scutil --set LocalHostName "0x6D746873"
-#     #sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "0x6D746873"
+- name: Set computer name (as done via System Preferences → Sharing)
+  #     sudo scutil --set ComputerName "0x6D746873"
+  #     sudo scutil --set HostName "0x6D746873"
+  #     sudo scutil --set LocalHostName "0x6D746873"
+  #     sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "0x6D746873"
+  state:
+    scutil:
+    - key: ComputerName
+      set: "{{ osx_computer_name }}"
+    - key: HostName
+      set: "{{ osx_computer_name }}"
+    - key: LocalHostName
+      set: "{{ osx_computer_name }}"
+    defaults:
+      key: /Library/Preferences/SystemConfiguration/com.apple.smb.server:NetBIOSName
+      set: "{{ osx_computer_name }}"
+  when: osx_computer_name is defined
+
 
 # Set standby delay
 #
@@ -21,18 +33,6 @@
 #
 #     sudo pmset -a standbydelay 86400
 
-# Disable the sound effects on boot
-
-
-# - name: read boot sound effects volume
-#   shell: nvram SystemAudioVolume
-#   register: system_audio_volume
-
-# - name: Disable the sound effects on boot
-#   command: nvram SystemAudioVolume='%80'
-#   sudo: yes
-#   when: (system_audio_volume.stdout | search('SystemAudioVolume\\t%80')) == false
-
 - name: Disable the sound effects on boot
   # 
   #     sudo nvram SystemAudioVolume=" "
@@ -41,8 +41,7 @@
   state:
     nvram:
       key: SystemAudioVolume
-      set: '%80'
-  sudo: true
+      set: ' '
   when: osx_disable_boot_sounds
 
 - name: disable UI sounds
@@ -253,7 +252,6 @@
     defaults:
       key: /Library/Preferences/com.apple.loginwindow:AdminHostInfo
       set: HostName
-  sudo: true
   when: osx_host_info_in_login_window
 
 # Restart automatically if the computer freezes

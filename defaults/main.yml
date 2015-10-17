@@ -12,6 +12,7 @@
 # general-ui-ux.yml
 # =================
 
+# osx_computer_name:                                        # String
 osx_disable_boot_sounds:                                  off
 osx_disable_ui_sounds:                                    off
 osx_hide_time_machine_in_menu_bar:                        off
