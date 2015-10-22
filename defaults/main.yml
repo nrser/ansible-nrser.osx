@@ -206,7 +206,7 @@ osx_menu_bar_hide: []
 # osx_finder_default_search: 
 
 # [bool] warn when changing a file extension
-# osx_finder_disable_change_extension_warning: 
+# osx_finder_change_extension_warning: 
 
 # [bool] spring loading for directories
 # osx_finder_spring_load_dirs: 

@@ -82,7 +82,7 @@
     defaults:
       # defaults write com.apple.finder AppleShowAllFiles -bool true
       key: com.apple.finder:AppleShowAllFiles
-      set: "{{ show hidden files by default }}"
+      set: "{{ osx_show_hidden_files }}"
       type: bool
   when: osx_show_hidden_files is defined
   notify:
@@ -181,7 +181,7 @@
     defaults:
       # defaults write NSGlobalDomain com.apple.springing.enabled -bool true
       key: NSGlobalDomain:com.apple.springing.enabled
-      set: "{{ spring loading for directories }}"
+      set: "{{ osx_finder_spring_load_dirs }}"
       type: bool
   when: osx_finder_spring_load_dirs is defined
   notify:
