@@ -9,4 +9,12 @@ OSX_SHOW_SCROLL_BARS_VALUES:
 - WhenScrolling
 - Automatic
 - Always
-  
+
+OSX_MENU_BAR_VALUES:
+- TimeMachine
+- Volume
+- User
+- Bluetooth
+- AirPort
+- Battery
+- Clock

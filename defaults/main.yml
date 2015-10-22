@@ -13,62 +13,89 @@
 # general-ui-ux.yml
 # =================
 
-# osx_computer_name:                                        # String
+# [string] Set computer name (as done via System Preferences → Sharing)
+# osx_computer_name: 
 
-# osx_ac_standbydelay:                                      # int seconds
+# [int] set AC Power stand-by delay in seconds
+# osx_ac_standbydelay: 
 
-# osx_batt_standbydelay:                                    # int seconds
+# [int] set Batter Power stand-by delay
+# osx_batt_standbydelay: 
 
-# TODO does not work:
-osx_disable_boot_sounds:                                  off
+# TODO does not work
+# Disable the sound effects on boot
+osx_disable_boot_sounds: off
 
-# osx_ui_sounds:                                            # bool
+# [bool] play UI sounds
+# osx_ui_sounds: 
 
-# osx_reduce_transparency:                                  # bool
+# [bool]  Disable transparency in the menu bar and elsewhere on Yosemite
+# osx_reduce_transparency: 
 
-osx_menu_bar_show:                                        []
+# [TimeMachine, Volume, User, Bluetooth, AirPort, Battery, Clock]
+# items to show in the menu bar
+osx_menu_bar_show: []
 
-osx_menu_bar_hide:                                        []
+# [TimeMachine, Volume, User, Bluetooth, AirPort, Battery, Clock]
+# items to hide in the menu bar
+osx_menu_bar_hide: []
 
-# osx_show_scroll_bars:                                     # one of WhenScrolling, Automatic, Always
+# [WhenScrolling, Automatic, Always] show scrollbars
+# osx_show_scroll_bars: 
 
-# HERE
+# [float] window resize speed for Cocoa applications
+# .osx uses 0.001
+# osx_window_resize_speed: 
 
-osx_increase_cocoa_window_resize_speed:                   off
+# [bool] Expand save panel by default
+# osx_expand_save_panel: 
 
-# osx_expand_save_panel:                                    # bool
+# [bool] Expand print panel by default
+# osx_expand_print_panel: 
 
-osx_expand_print_panel:                                   off
+# [bool] Save to iCloud by default
+# osx_default_save_to_icloud: 
 
-osx_default_save_to_disk:                                 off
+# [bool] Automatically quit printer app once the print jobs complete
+# osx_quit_print_app_when_finished: 
 
-osx_quit_print_app_when_finished:                         off
+# [bool] the "Are you sure you want to open this application?" dialog
+# osx_app_quarantine: 
 
-osx_disable_app_quarantine:                               off
+# [bool] Display ASCII control characters using caret notation in standard 
+# text views
+# osx_control_characters_as_carets: 
 
-osx_control_characters_as_carets:                         off
+# [bool] Resume ("Reopen Windows When Logging Back In" option)
+# osx_resume: 
 
-osx_disable_resume:                                       off
+# [bool] Disable automatic termination of inactive apps
+# osx_disable_app_auto_terminate: 
 
-osx_disable_app_auto_terminate:                           off
+# [bool] enable or disable the crash reporter
+# osx_crash_reporter: 
 
-osx_disable_crash_reporter:                               off
+# [bool] Set Help Viewer windows to non-floating mode
+# osx_non_floating_help_windows: 
 
-osx_non_floating_help_windows:                            off
+# [bool] show host info when clicking the clock in login window
+# osx_host_info_in_login_window: 
 
-osx_host_info_in_login_window:                            off
+# [int] set frequency to check for software udpates in days
+# osx_update_check_frequency: 
 
-osx_daily_update_check:                                   off
+# [bool] smart quote substitution
+# osx_smart_quotes: 
 
-osx_disable_notif_center:                                 off
+# [bool] smart dash substitution
+# osx_smart_dashes: 
 
-osx_disable_smart_quotes:                                 off
+# [string] format date and time on menu bar
+# example: EEE MMM d  HH:mm
+# osx_menu_bar_date_format: 
 
-osx_disable_smart_dashes:                                 off
-
-# osx_menu_bar_date_format:                                 EEE MMM d  HH:mm # String
-
-# osx_volume_feedback_sound:                                # bool
+# [bool] play sound feedback when volume is changed
+# osx_volume_feedback_sound: 
 
 # ssd.yml
 # =======

@@ -65,7 +65,7 @@
 #       set: '%80'
 #   when: osx_disable_boot_sounds
 
-- name: disable UI sounds
+- name: play UI sounds
   state:
     defaults:
       key: com.apple.systemsound:com.apple.sound.uiaudio.enabled
@@ -83,6 +83,14 @@
       set: "{{ osx_reduce_transparency }}"
       type: bool
   when: osx_reduce_transparency is defined
+
+- name: check osx_menu_bar_show values
+  fail:
+    msg: >
+      `osx_menu_bar_show` must be a value in 
+      {{ OSX_MENU_BAR_VALUES }}, not {{ item|to_json }}.
+  when: item not in OSX_MENU_BAR_VALUES
+  with_items: osx_menu_bar_show
 
 - name: show {{ item }} in the menu bar
   # more configurable adaptation of
@@ -110,6 +118,14 @@
   with_items: osx_menu_bar_show
   notify:
   - require restart
+
+- name: check osx_menu_bar_hide values
+  fail:
+    msg: >
+      `osx_menu_bar_hide` must be a value in 
+      {{ OSX_MENU_BAR_VALUES }}, not {{ item|to_json }}.
+  when: item not in OSX_MENU_BAR_VALUES
+  with_items: osx_menu_bar_hide
 
 - name: hide {{ item }} in the menu bar
   state:
@@ -170,8 +186,9 @@
   state:
     defaults:
       key: NSGlobalDomain:NSWindowResizeTime
-      set: 0.001
-  when: osx_increase_cocoa_window_resize_speed
+      set: "{{ osx_window_resize_speed }}"
+      type: float
+  when: osx_window_resize_speed is defined
 
 - name: Expand save panel by default
   #
@@ -196,20 +213,23 @@
   state:
     defaults:
     - key: NSGlobalDomain:PMPrintingExpandedStateForPrint
-      set: true
+      set: "{{ osx_expand_print_panel }}"
+      type: bool
     - key: NSGlobalDomain:PMPrintingExpandedStateForPrint2
-      set: true
-  when: osx_expand_print_panel
+      set: "{{ osx_expand_print_panel }}"
+      type: bool
+  when: osx_expand_print_panel is defined
 
-- name: Save to disk (not to iCloud) by default
+- name: Save to iCloud by default
   #
   #     defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
   #
   state:
     defaults:
       key: NSGlobalDomain:NSDocumentSaveNewDocumentsToCloud
-      set: false
-  when: osx_default_save_to_disk
+      set: "{{ osx_default_save_to_icloud }}"
+      type: bool
+  when: osx_default_save_to_icloud is defined
 
 - name: Automatically quit printer app once the print jobs complete
   # 
@@ -218,18 +238,20 @@
   state:
     defaults:
       key: com.apple.print.PrintingPrefs:Quit When Finished
-      set: true
-  when: osx_quit_print_app_when_finished
+      set: "{{ osx_quit_print_app_when_finished }}"
+      type: bool
+  when: osx_quit_print_app_when_finished is defined
 
-- name: Disable the “Are you sure you want to open this application?” dialog
+- name: the “Are you sure you want to open this application?” dialog
   # 
   #     defaults write com.apple.LaunchServices LSQuarantine -bool false
   #
   state:
     defaults:
       key: com.apple.LaunchServices:LSQuarantine
-      set: false
-  when: osx_disable_app_quarantine
+      set: "{{ osx_app_quarantine }}"
+      type: bool
+  when: osx_app_quarantine is defined
 
 # TODO: implement?
 # Remove duplicates in the “Open With” menu (also see `lscleanup` alias)
@@ -247,27 +269,30 @@
   state:
     defaults:
       key: NSGlobalDomain:NSTextShowsControlCharacters
-      set: true
-  when: osx_control_characters_as_carets
+      set: "{{ osx_control_characters_as_carets }}"
+      type: bool
+  when: osx_control_characters_as_carets is defined
 
 # TODO: untested
-- name: Disable Resume ("Reopen Windows When Logging Back In" option) system-wide
+- name: Resume ("Reopen Windows When Logging Back In" option) system-wide
   # 
   #     defaults write com.apple.systempreferences NSQuitAlwaysKeepsWindows -bool false
   # 
   state:
     defaults:
       key: com.apple.systempreferences:NSQuitAlwaysKeepsWindows
-      set: false
-  when: osx_disable_resume
+      set: "{{ osx_resume }}"
+      type: bool
+  when: osx_resume is defined
 
 # TODO: untested
 - name: Disable automatic termination of inactive apps
   state:
     defaults:
       key: NSGlobalDomain:NSDisableAutomaticTermination
-      set: true
-  when: osx_disable_app_auto_terminate
+      set: "{{ osx_disable_app_auto_terminate }}"
+      type: bool
+  when: osx_disable_app_auto_terminate is defined
 
 # TODO: untested
 - name: Disable the crash reporter
@@ -278,7 +303,20 @@
     defaults:
       key: com.apple.CrashReporter:DialogType
       set: none
-  when: osx_disable_crash_reporter
+  when: > 
+    osx_disable_crash_reporter is defined and 
+    osx_disable_crash_reporter
+
+# TODO: untested
+- name: Enable the crash reporter
+  # undo above
+  state:
+    defaults:
+      key: com.apple.CrashReporter:DialogType
+      unset: 
+  when: >
+    osx_disable_crash_reporter is defined and 
+    not osx_disable_crash_reporter
 
 # TODO: untested
 - name: Set Help Viewer windows to non-floating mode
@@ -288,10 +326,11 @@
   state:
     defaults:
       key: com.apple.helpviewer:DevMode
-      set: true
-  when: osx_non_floating_help_windows
+      set: "{{ osx_non_floating_help_windows }}"
+      type: bool
+  when: osx_non_floating_help_windows is defined
 
-# TODO: implement
+# TODO: implement?
 # Fix for the ancient UTF-8 bug in QuickLook (https://mths.be/bbo)
 # Commented out, as this is known to cause problems in various Adobe apps :(
 # See https://github.com/mathiasbynens/dotfiles/issues/237
@@ -301,7 +340,7 @@
 # i don't think i want problems in my adobe apps
 
 # TODO: untested
-- name: host info when clicking the clock in login window
+- name: show host info when clicking the clock in login window
   # 
   #     sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
   #
@@ -309,7 +348,21 @@
     defaults:
       key: /Library/Preferences/com.apple.loginwindow:AdminHostInfo
       set: HostName
-  when: osx_host_info_in_login_window
+  when: >
+    osx_host_info_in_login_window is defined and
+    osx_host_info_in_login_window
+
+- name: hide host info when clicking the clock in login window
+  # 
+  #     sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
+  #
+  state:
+    defaults:
+      key: /Library/Preferences/com.apple.loginwindow:AdminHostInfo
+      unset: 
+  when: >
+    osx_host_info_in_login_window is defined and
+    not osx_host_info_in_login_window
 
 # Restart automatically if the computer freezes
 # 
@@ -325,49 +378,54 @@
 #
 # not totally familiar with why you would do this
 
-- name: Check for software updates daily, not just once per week
+- name: set frequency to check for software udpates in days
   # 
   #     defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
   # 
   state:
     defaults:
       key: com.apple.SoftwareUpdate:ScheduleFrequency
-      set: 1
-  when: osx_daily_update_check
+      set: "{{ osx_update_check_frequency }}"
+      type: int
+  when: osx_update_check_frequency is defined
 
-- name: Disable Notification Center and remove the menu bar icon
-  # 
-  #     launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist 2> /dev/null
-  #
-  # command: launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist
-  state:
-    launchd:
-      key:
-      - /System/Library/LaunchAgents/com.apple.notificationcenterui.plist
-      - Disabled
-      set: true
-  when: osx_disable_notif_center
+# TODO implement
+# - name: Disable Notification Center and remove the menu bar icon
+#   # 
+#   #     launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist 2> /dev/null
+#   #
+#   # command: launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist
+#   state:
+#     launchd:
+#       key:
+#       - /System/Library/LaunchAgents/com.apple.notificationcenterui.plist
+#       - Disabled
+#       set: true
+#   when: osx_disable_notif_center
 
-- name: Disable smart quotes as they’re annoying when typing code
+- name: smart quote substitution
   # 
   #     defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
   # 
   state:
     defaults:
       key: NSGlobalDomain:NSAutomaticQuoteSubstitutionEnabled
-      set: false
-  when: osx_disable_smart_quotes
+      set: "{{ osx_smart_quotes }}"
+      type: bool
+  when: osx_smart_quotes is defined
 
-- name: Disable smart dashes as they’re annoying when typing code
+- name: smart dash substitution
   # 
   #     defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
   #
   state:
     defaults:
       key: NSGlobalDomain:NSAutomaticDashSubstitutionEnabled
-      set: false
-  when: osx_disable_smart_dashes
+      set: "{{ osx_smart_dashes }}"
+      type: bool
+  when: osx_smart_dashes is defined
 
+# TODO implement
 # Set a custom wallpaper image. `DefaultDesktop.jpg` is already a symlink, and
 # all wallpapers are in `/Library/Desktop Pictures/`. The default is `Wave.jpg`.
 # 
@@ -384,7 +442,7 @@
   - restart SystemUIServer
   when: osx_menu_bar_date_format is defined
 
-- name: play sound when volume is changed
+- name: play sound feedback when volume is changed
   state:
     defaults:
       key: NSGlobalDomain:com.apple.sound.beep.feedback
