@@ -8,7 +8,8 @@
     defaults:
       # defaults write com.apple.screensaver askForPassword -int 1
       key: com.apple.screensaver:askForPassword
-      set: "{{ osx_password_after_screen_saver|int }}"
+      set: "{{ osx_password_after_screen_saver }}"
+      type: int
   when: osx_password_after_screen_saver is defined
 
 - name: Require password 5 seconds after sleep or screen saver begins
@@ -16,7 +17,8 @@
     defaults:
       # defaults write com.apple.screensaver askForPasswordDelay -int 5
       key: com.apple.screensaver:askForPasswordDelay
-      set: "{{ osx_password_delay|float }}"
+      set: "{{ osx_password_delay }}"
+      type: float
   when: osx_password_delay is defined
 
 - name: create ~/temp/screen-shots directory
@@ -72,7 +74,8 @@
   state:
     defaults:
       key: com.apple.screensaver:idleTime
-      set: "{{ osx_screen_saver_delay|int }}"
-      options:
-        current_host: true
+      set: "{{ osx_screen_saver_delay }}"
+      type: int
+      current_host: true
+        
   when: osx_screen_saver_delay is defined

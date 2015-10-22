@@ -9,31 +9,66 @@
 # basically, turn things to 'on' here if they're off, or uncomment them
 # and set a setting if they're commented out.
 
+
 # general-ui-ux.yml
 # =================
 
 # osx_computer_name:                                        # String
+
+# osx_ac_standbydelay:                                      # int seconds
+
+# osx_batt_standbydelay:                                    # int seconds
+
+# TODO does not work:
 osx_disable_boot_sounds:                                  off
-osx_disable_ui_sounds:                                    off
-osx_hide_time_machine_in_menu_bar:                        off
-osx_always_show_scroll_bars:                              off
+
+# osx_ui_sounds:                                            # bool
+
+# osx_reduce_transparency:                                  # bool
+
+osx_menu_bar_show:                                        []
+
+osx_menu_bar_hide:                                        []
+
+# osx_show_scroll_bars:                                     # one of WhenScrolling, Automatic, Always
+
+# HERE
+
 osx_increase_cocoa_window_resize_speed:                   off
-osx_expand_save_panel:                                    off
+
+# osx_expand_save_panel:                                    # bool
+
 osx_expand_print_panel:                                   off
+
 osx_default_save_to_disk:                                 off
+
 osx_quit_print_app_when_finished:                         off
+
 osx_disable_app_quarantine:                               off
+
 osx_control_characters_as_carets:                         off
+
 osx_disable_resume:                                       off
+
 osx_disable_app_auto_terminate:                           off
+
 osx_disable_crash_reporter:                               off
+
 osx_non_floating_help_windows:                            off
+
 osx_host_info_in_login_window:                            off
-osx_daily_udpate_check:                                   off
+
+osx_daily_update_check:                                   off
+
 osx_disable_notif_center:                                 off
+
 osx_disable_smart_quotes:                                 off
+
 osx_disable_smart_dashes:                                 off
-# osx_menu_bar_date_format:                                 EEE MMM d  HH:mm
+
+# osx_menu_bar_date_format:                                 EEE MMM d  HH:mm # String
+
+# osx_volume_feedback_sound:                                # bool
 
 # ssd.yml
 # =======
@@ -43,7 +78,7 @@ osx_disable_time_machine:                                 off
 # input.yml
 # =========
 
-osx_trackpad_click_to_tap:                                off
+# osx_trackpad_click_to_tap:                                false # bool
 osx_better_bluetooth_audio:                               off
 osx_full_keyboard_access:                                 off
 # osx_languages:
@@ -112,7 +147,8 @@ osx_dock_speed_up_mission_control:                        off
 # osx_rearrange_spaces_by_use:                              false # boolean
 # osx_dock_autohide:                                        false # boolean
 # osx_dock_hidden_apps_translucent:                         true # boolean
-osx_disable_launchpad_gesture:                            off
+# osx_disable_launchpad_gesture:                            true # boolean
+# osx_spaces_switch_on_activate:                            false # boolean
 
 # safari-webkit.yml
 # =================

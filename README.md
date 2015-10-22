@@ -1,31 +1,59 @@
 Role Name
 =========
 
-A brief description of the role goes here.
+basically an ansible implementation of [Mathias Bynens'](https://github.com/mathiasbynens) [.osx](https://mths.be/osx) with
+some omissions (that will maybe get implemented eventually) and some additions.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+Ruby
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+i don't want to spend the time to copy *all* the variables over here
+(there's a lot), so check out `defaults/main.yml`... it lays out all the
+variables, their defaults, and which tasks file they are used in.
+
+nothing should happen when you include the role without defining any
+`osx_*` variables. you can copy the contents of `defaults/main.yml` into
+your role statement (or somewhere else you get your vars from) and define
+or switch to `on` the vars you want.
+
+vars that trigger one way behaviors (set something in a state and make sure
+it stays that way) are `on` / `off` values, where `off` does nothing and
+`on` sets the state. turning these back to `off` *does not* undo the changes.
+
+variables that can be used to set values are commented out in
+`defaults/main.yml` with examples and type info.
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+-   [nrser.state_mate](https://github.com/nrser/ansible-nrser.state_mate)
+-   [nrser.sync.rb](https://github.com/nrser/ansible-nrser.sync.rb)
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+```yaml
+---
+- name: neil's osx
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+  hosts: all
+
+  roles:
+
+  - role: nrser.osx
+    # i hate the ui sounds
+    osx_disable_ui_sounds:                                    on
+    
+    # i like the scroll bars to always be shown
+    osx_always_show_scroll_bars:                              on
+    
+    # etc...
+```
 
 License
 -------
@@ -35,4 +63,4 @@ BSD
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+<https://github.com/nrser>

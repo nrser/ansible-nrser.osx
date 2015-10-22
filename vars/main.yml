@@ -1,2 +1,12 @@
 ---
 # vars file for nrser.osx
+
+# "constants" - not really constant, but don't fuck with these unless you
+# really know what you're doing
+
+# the values that `osx_show_scroll_bars` can take
+OSX_SHOW_SCROLL_BARS_VALUES:
+- WhenScrolling
+- Automatic
+- Always
+  

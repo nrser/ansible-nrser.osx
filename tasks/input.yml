@@ -10,22 +10,32 @@
       #     defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
       #
       - key: com.apple.driver.AppleBluetoothMultitouch.trackpad:Clicking
-        set: true
+        set: "{{ osx_trackpad_click_to_tap }}"
+        type: bool
       #
       #     defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
       # 
       - key: NSGlobalDomain:com.apple.mouse.tapBehavior
-        set: 1
-        options:
-          current_host: true
+        set: "{{ osx_trackpad_click_to_tap }}"
+        type: int
+        current_host: true
       # 
       #     defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
       #
+      # NOTE doesn't show up in plistener, not sure if needed
+      # 
       - key: NSGlobalDomain:com.apple.mouse.tapBehavior
-        set: 1
+        set: "{{ osx_trackpad_click_to_tap }}"
+        type: int
+      #
+      # added from looking at plistener
+      #
+      - key: com.apple.AppleMultitouchTrackpad:Clicking
+        set: "{{ osx_trackpad_click_to_tap }}"
+        type: bool
   notify:
   - require logout/login
-  when: osx_trackpad_click_to_tap
+  when: osx_trackpad_click_to_tap is defined
 
 # Trackpad: map bottom right corner to right-click
 # 
@@ -134,9 +144,8 @@
       - /System/Library/LaunchAgents/com.apple.rcd.plist
       - Disabled
       set: true
-  sudo: true
   # TODO: this fails if the item is not there?
-  ignore_errors: true
+  # ignore_errors: true
   when: osx_itunes_ignore_media_keys
 
 - name: include simplified chinese pinyin input

@@ -18,8 +18,11 @@
     defaults:
       # defaults write com.apple.dock tilesize -int 36
       key: com.apple.dock:tilesize
-      set: "{{ osx_dock_icon_size|int }}"
+      set: "{{ osx_dock_icon_size }}"
+      type: float
   when: osx_dock_icon_size is defined
+  notify:
+  - restart Dock
 
 - name: set minimize/maximize window effect
   state:
@@ -34,7 +37,8 @@
     defaults:
       # defaults write com.apple.dock minimize-to-application -bool true
       key: com.apple.dock:minimize-to-application
-      set: "{{ osx_min_to_app_icon|bool }}"
+      set: "{{ osx_min_to_app_icon }}"
+      type: bool
   when: osx_dock_min_to_app_icon is defined
 
 - name: set spring loading for all Dock items
@@ -42,15 +46,19 @@
     defaults:
       # defaults write com.apple.dock enable-spring-load-actions-on-all-items -bool true
       key: com.apple.dock:enable-spring-load-actions-on-all-items
-      set: "{{ osx_dock_spring_load_all|bool }}"
+      set: "{{ osx_dock_spring_load_all }}"
+      type: bool
   when: osx_dock_spring_load_all is defined
+  notify:
+  - restart Dock
 
 - name: set indicator lights for open applications in the Dock
   state:
     defaults:
       # defaults write com.apple.dock show-process-indicators -bool true
       key: com.apple.dock:show-process-indicators
-      set: "{{ osx_dock_app_indicator_lights|bool }}"
+      set: "{{ osx_dock_app_indicator_lights }}"
+      type: bool
   when: osx_dock_app_indicator_lights is defined
 
 - name: set Dock open apps animation
@@ -58,7 +66,8 @@
     defaults:
       # defaults write com.apple.dock launchanim -bool false
       key: com.apple.dock:launchanim
-      set: "{{ osx_dock_animate_opening_apps|bool }}"
+      set: "{{ osx_dock_animate_opening_apps }}"
+      type: bool
   when: osx_dock_animate_opening_apps is defined
 
 - name: Speed up Mission Control animations
@@ -80,7 +89,7 @@
     defaults:
       key: com.apple.dashboard:mcx-disabled
       unset:
-  notify: restart dock
+  notify: restart Dock
   when: (osx_dashboard_enabled is defined) and (osx_dashboard_enabled)
 
 - name: disable Dashboard
@@ -95,7 +104,8 @@
   state:
     defaults:
       key: com.apple.dock:dashboard-in-overlay
-      set: "{{ (not osx_dashboard_as_space)|bool }}"
+      set: "{{ not osx_dashboard_as_space }}"
+      type: bool
   when: osx_dashboard_as_space is defined
 
 - name: set Dashboard dev mode (allows keeping widgets on the desktop)
@@ -103,14 +113,16 @@
     defaults:
       # defaults write com.apple.dashboard devmode -bool true
       key: com.apple.dashboard:devmode
-      set: "{{ osx_dashboard_dev_mode|bool }}"
+      set: "{{ osx_dashboard_dev_mode }}"
+      type: bool
   when: osx_dashboard_dev_mode is defined
 
 - name: set automatically rearrange Spaces based on most recent use
   state:
     defaults:
       key: com.apple.dock:mru-spaces
-      set: "{{ osx_rearrange_spaces_by_use|bool }}"
+      set: "{{ osx_rearrange_spaces_by_use }}"
+      type: bool
   when: osx_rearrange_spaces_by_use is defined
 
 # # Remove the auto-hiding Dock delay
@@ -122,7 +134,8 @@
   state:
     defaults:
       key: com.apple.dock:autohide
-      set: "{{ osx_dock_autohide|bool }}"
+      set: "{{ osx_dock_autohide }}"
+      type: bool
   notify: restart dock
   when: osx_dock_autohide is defined
 
@@ -130,15 +143,17 @@
   state:
     defaults:
       key: com.apple.dock:showhidden
-      set: "{{ osx_dock_hidden_apps_translucent|bool }}"
+      set: "{{ osx_dock_hidden_apps_translucent }}"
+      type: bool
   when: osx_dock_hidden_apps_translucent is defined
 
 - name: Disable the Launchpad gesture (pinch with thumb and three fingers)
   state:
     defaults:
       key: com.apple.dock:showLaunchpadGestureEnabled
-      set: 0
-  when: osx_disable_launchpad_gesture
+      set: "{{ osx_launchpad_gesture }}"
+      type: bool
+  when: osx_launchpad_gesture is defined
 
 # # Reset Launchpad, but keep the desktop wallpaper intact
 # find "${HOME}/Library/Application Support/Dock" -name "*-*.db" -maxdepth 1 -delete
@@ -173,3 +188,19 @@
 # defaults write com.apple.dock wvous-bl-corner -int 5
 # defaults write com.apple.dock wvous-bl-modifier -int 0
 
+# when switching to an application, whether to switch to a space with that
+# app open.
+# 
+# @see http://hints.macworld.com/article.php?story=20071027195419540
+# 
+# TODO does not seem to take immediate effect
+# 
+- name: Switch to space with app open when activating
+  state:
+    defaults:
+      key: NSGlobalDomain:AppleSpacesSwitchOnActivate
+      set: "{{ osx_spaces_switch_on_activate }}"
+      type: bool
+  when: osx_spaces_switch_on_activate is defined
+  notify:
+  - restart Dock

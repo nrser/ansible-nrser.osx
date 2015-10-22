@@ -21,83 +21,129 @@
       set: "{{ osx_computer_name }}"
   when: osx_computer_name is defined
 
-
-# Set standby delay
-#
-# default for my Air is 4200 seconds = 70 minutes
-# Mathias had it at 86400 seconds = 24 hours
-#
-# exmplanied a little bit here:
-#
-# <http://osxdaily.com/2013/01/21/mac-slow-wake-from-sleep-fix/>
-#
-#     sudo pmset -a standbydelay 86400
-
-- name: Disable the sound effects on boot
-  # 
-  #     sudo nvram SystemAudioVolume=" "
-  # 
-  # NOTE: seems to 'stick' much better if you use '%80' rather than ' '
+- name: set AC Power stand-by delay
+  # Set standby delay
+  #
+  # default for my Air is 4200 seconds = 70 minutes
+  # Mathias had it at 86400 seconds = 24 hours
+  # default for my mpb is 10800 for battery, off (0) for AC
+  #
+  # exmplanied a little bit here:
+  #
+  # <http://osxdaily.com/2013/01/21/mac-slow-wake-from-sleep-fix/>
+  #
+  #     sudo pmset -a standbydelay 86400
   state:
-    nvram:
-      key: SystemAudioVolume
-      set: ' '
-  when: osx_disable_boot_sounds
+    pmset:
+      key:
+      - AC Power
+      - standbydelay
+      set: "{{ osx_ac_standbydelay }}"
+      type: string
+  when: osx_ac_standbydelay is defined
+
+- name: set Batter Power stand-by delay
+  state:
+    pmset:
+      key:
+      - Battery Power
+      - standbydelay
+      set: "{{ osx_batt_standbydelay }}"
+      type: string
+  when: osx_batt_standbydelay is defined
+
+# TODO: fix
+# - name: Disable the sound effects on boot
+#   # 
+#   #     sudo nvram SystemAudioVolume=" "
+#   # 
+#   # NOTE: seems to 'stick' much better if you use '%80' rather than ' '
+#   #
+#   state:
+#     nvram:
+#       key: SystemAudioVolume
+#       set: '%80'
+#   when: osx_disable_boot_sounds
 
 - name: disable UI sounds
   state:
     defaults:
       key: com.apple.systemsound:com.apple.sound.uiaudio.enabled
-      set: 0
-  when: osx_disable_ui_sounds
+      set: "{{ osx_ui_sounds|int }}"
+      type: int
+  when: osx_ui_sounds is defined
 
-# Disable transparency in the menu bar and elsewhere on Yosemite
-# 
-#     defaults write com.apple.universalaccess reduceTransparency -bool true
-
-- name: hide the Time Machine icon in menu bar (by host)
+- name: Disable transparency in the menu bar and elsewhere on Yosemite
+  # 
+  #     defaults write com.apple.universalaccess reduceTransparency -bool true
   #
+  state:
+    defaults:
+      key: com.apple.universalaccess:reduceTransparency
+      set: "{{ osx_reduce_transparency }}"
+      type: bool
+  when: osx_reduce_transparency is defined
+
+- name: show {{ item }} in the menu bar
+  # more configurable adaptation of
+  # 
   #     for domain in ~/Library/Preferences/ByHost/com.apple.systemuiserver.*; do
-  #       defaults write "${domain}" dontAutoLoad -array \
-  #         "/System/Library/CoreServices/Menu Extras/TimeMachine.menu" \
-  #         "/System/Library/CoreServices/Menu Extras/Volume.menu" \
-  #         "/System/Library/CoreServices/Menu Extras/User.menu"
+  #     	defaults write "${domain}" dontAutoLoad -array \
+  #     		"/System/Library/CoreServices/Menu Extras/TimeMachine.menu" \
+  #     		"/System/Library/CoreServices/Menu Extras/Volume.menu" \
+  #     		"/System/Library/CoreServices/Menu Extras/User.menu"
   #     done
-  #
-  # TODO: does this work? require logout? restrting SystemUIServer doesn't
-  #       seem to help
-  state:
-    defaults:
-      key: "{{ item }}:dontAutoLoad"
-      array_contains: "/System/Library/CoreServices/Menu Extras/TimeMachine.menu"
-  with_fileglob: ~/Library/Preferences/ByHost/com.apple.systemuiserver.*
-  # notify:
-  # - restart SystemUIServer
-  when: osx_hide_time_machine_in_menu_bar
-
-- name: hide the Time Machine icon in menu bar (global)
   #     defaults write com.apple.systemuiserver menuExtras -array \
-  #       "/System/Library/CoreServices/Menu Extras/Bluetooth.menu" \
-  #       "/System/Library/CoreServices/Menu Extras/AirPort.menu" \
-  #       "/System/Library/CoreServices/Menu Extras/Battery.menu" \
-  #       "/System/Library/CoreServices/Menu Extras/Clock.menu"
+  #     	"/System/Library/CoreServices/Menu Extras/Bluetooth.menu" \
+  #     	"/System/Library/CoreServices/Menu Extras/AirPort.menu" \
+  #     	"/System/Library/CoreServices/Menu Extras/Battery.menu" \
+  #     	"/System/Library/CoreServices/Menu Extras/Clock.menu"
+  #
   state:
     defaults:
-      key: com.apple.systemuiserver:menuExtras
-      array_missing: "/System/Library/CoreServices/Menu Extras/TimeMachine.menu"
-  # notify:
-  # - restart SystemUIServer
-  when: osx_hide_time_machine_in_menu_bar
+    - key: com.apple.systemuiserver.plist:menuExtras
+      array_contains: /System/Library/CoreServices/Menu Extras/{{ item }}.menu
+    - key: com.apple.systemuiserver:dontAutoLoad
+      array_missing: /System/Library/CoreServices/Menu Extras/{{ item }}.menu
+      current_host: true
+      unset_ok: true
+  with_items: osx_menu_bar_show
+  notify:
+  - require restart
 
+- name: hide {{ item }} in the menu bar
+  state:
+    defaults:
+    - key: com.apple.systemuiserver.plist:menuExtras
+      array_missing: /System/Library/CoreServices/Menu Extras/{{ item }}.menu
+    - key: com.apple.systemuiserver:dontAutoLoad
+      array_contains: /System/Library/CoreServices/Menu Extras/{{ item }}.menu
+      current_host: true
+      create: true
+  with_items: osx_menu_bar_hide
+  notify:
+  - require restart
+
+# TODO implement
 # Set highlight color to green
 #
 #     defaults write NSGlobalDomain AppleHighlightColor -string "0.764700 0.976500 0.568600"
 
+# TODO implement
 # Set sidebar icon size to medium
 #
 #     defaults write NSGlobalDomain NSTableViewDefaultSizeMode -int 2
 
-- name: Always show scrollbars
+- name: check osx_show_scroll_bars value
+  fail:
+    msg: >
+      `osx_show_scroll_bars` must be a value in 
+      {{ OSX_SHOW_SCROLL_BARS_VALUES }}, not {{ osx_show_scroll_bars|to_json }}.
+  when: >
+    osx_show_scroll_bars is defined and 
+    osx_show_scroll_bars not in OSX_SHOW_SCROLL_BARS_VALUES
+
+- name: show scrollbars
   #
   #     defaults write NSGlobalDomain AppleShowScrollBars -string "Always"
   #
@@ -105,14 +151,18 @@
   state:
     defaults:
       key: NSGlobalDomain:AppleShowScrollBars
-      set: Always
-  when: osx_always_show_scroll_bars
+      set: "{{ osx_show_scroll_bars }}"
+  when: >
+    osx_show_scroll_bars is defined and 
+    osx_show_scroll_bars in OSX_SHOW_SCROLL_BARS_VALUES
 
+# NOTE: won't implement
 # Disable smooth scrolling
 # (Uncomment if you’re on an older Mac that messes up the animation)
 # 
 #     #defaults write NSGlobalDomain NSScrollAnimationEnabled -bool false
 
+# TODO: untested
 - name: Increase window resize speed for Cocoa applications
   #
   #     defaults write NSGlobalDomain NSWindowResizeTime -float 0.001
@@ -131,10 +181,12 @@
   state:
     defaults:
     - key: NSGlobalDomain:NSNavPanelExpandedStateForSaveMode
-      set: true
+      set: "{{ osx_expand_save_panel }}"
+      type: bool
     - key: NSGlobalDomain:NSNavPanelExpandedStateForSaveMode2
-      set: true
-  when: osx_expand_save_panel
+      set: "{{ osx_expand_save_panel }}"
+      type: bool
+  when: osx_expand_save_panel is defined
 
 - name: Expand print panel by default
   # 
@@ -179,12 +231,14 @@
       set: false
   when: osx_disable_app_quarantine
 
+# TODO: implement?
 # Remove duplicates in the “Open With” menu (also see `lscleanup` alias)
 # 
 #     /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user
 # 
 # not sure about this, skipping for now
 
+# TODO: untested
 - name: Display ASCII control characters using caret notation in standard text views
   # Try e.g. `cd /tmp; unidecode "\x{0000}" > cc.txt; open -e cc.txt`
   #
@@ -196,7 +250,8 @@
       set: true
   when: osx_control_characters_as_carets
 
-- name: Disable Resume system-wide
+# TODO: untested
+- name: Disable Resume ("Reopen Windows When Logging Back In" option) system-wide
   # 
   #     defaults write com.apple.systempreferences NSQuitAlwaysKeepsWindows -bool false
   # 
@@ -206,6 +261,7 @@
       set: false
   when: osx_disable_resume
 
+# TODO: untested
 - name: Disable automatic termination of inactive apps
   state:
     defaults:
@@ -213,7 +269,7 @@
       set: true
   when: osx_disable_app_auto_terminate
 
-# WARNING: untested
+# TODO: untested
 - name: Disable the crash reporter
   # 
   #     defaults write com.apple.CrashReporter DialogType -string "none"
@@ -224,7 +280,7 @@
       set: none
   when: osx_disable_crash_reporter
 
-# WARNING: untested
+# TODO: untested
 - name: Set Help Viewer windows to non-floating mode
   # 
   #     defaults write com.apple.helpviewer DevMode -bool true
@@ -235,6 +291,7 @@
       set: true
   when: osx_non_floating_help_windows
 
+# TODO: implement
 # Fix for the ancient UTF-8 bug in QuickLook (https://mths.be/bbo)
 # Commented out, as this is known to cause problems in various Adobe apps :(
 # See https://github.com/mathiasbynens/dotfiles/issues/237
@@ -243,7 +300,7 @@
 #
 # i don't think i want problems in my adobe apps
 
-# WARNING: untested
+# TODO: untested
 - name: host info when clicking the clock in login window
   # 
   #     sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
@@ -259,8 +316,9 @@
 #     sudo systemsetup -setrestartfreeze on
 #
 # this seems like a server setting, to try and bring it back up if it freezes
-# TODO: should be on for servers
+# TODO: should be on for servers?
 
+# TODO: implement
 # Never go into computer sleep mode
 # 
 #     sudo systemsetup -setcomputersleep Off > /dev/null
@@ -275,7 +333,7 @@
     defaults:
       key: com.apple.SoftwareUpdate:ScheduleFrequency
       set: 1
-  when: osx_daily_udpate_check
+  when: osx_daily_update_check
 
 - name: Disable Notification Center and remove the menu bar icon
   # 
@@ -325,3 +383,11 @@
   notify:
   - restart SystemUIServer
   when: osx_menu_bar_date_format is defined
+
+- name: play sound when volume is changed
+  state:
+    defaults:
+      key: NSGlobalDomain:com.apple.sound.beep.feedback
+      set: "{{ osx_volume_feedback_sound }}"
+      type: int
+  when: osx_volume_feedback_sound is defined

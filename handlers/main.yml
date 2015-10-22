@@ -1,6 +1,14 @@
 ---
 # handlers file for nrser.osx
 
+# the list from .osx:
+# for app in "Activity Monitor" "Address Book" "Calendar" "Contacts" "cfprefsd" \
+# 	"Dock" "Finder" "Google Chrome" "Google Chrome Canary" "Mail" "Messages" \
+# 	"Opera" "Safari" "SizeUp" "Spectacle" "SystemUIServer" "Terminal" \
+# 	"Transmission" "Twitter" "iCal"; do
+# 	killall "${app}" > /dev/null 2>&1
+# done
+
 - name: restart SystemUIServer
   shell: killall SystemUIServer
 
@@ -15,8 +23,8 @@
   debug:
     msg: "NOTICE: requires restart to see changes"
 
-- name: restart dock
-  shell: killall -HUP Dock
+- name: restart Dock
+  shell: killall Dock
 
 # spotlight
 

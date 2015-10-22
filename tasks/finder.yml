@@ -146,7 +146,8 @@
     defaults:
       # defaults write NSGlobalDomain com.apple.springing.delay -float 0.5
       key: NSGlobalDomain:com.apple.springing.delay
-      set: "{{ osx_finder_spring_load_delay|float }}"
+      set: "{{ osx_finder_spring_load_delay }}"
+      type: float
   when: osx_finder_spring_load_delay is defined
   notify:
   - restart Finder
@@ -232,7 +233,8 @@
       key: "com.apple.finder:{{ item }}:IconViewSettings:gridSpacing"
       # default: 54
       # mths: 100
-      set: "{{ osx_finder_icon_spacing|int }}"
+      set: "{{ osx_finder_icon_spacing }}"
+      type: int
   with_items:
   - DesktopViewSettings
   - FK_StandardViewSettings
@@ -250,7 +252,8 @@
       key: "com.apple.finder:{{ item }}:IconViewSettings:iconSize"
       # default: 64
       # mths: 80
-      set: "{{ osx_finder_icon_size|int }}"
+      set: "{{ osx_finder_icon_size }}"
+      type: int
   with_items:
   - DesktopViewSettings
   - FK_StandardViewSettings
@@ -296,9 +299,12 @@
 #
 # don't think i care
 
-# TODO: shouldn't run every time if possible
 - name: Show the ~/Library folder
-  command: chflags nohidden ~/Library
+  sync.rb:
+    in_sync?: |
+      ! `ls -aOl ~/Library`.lines[1].include? 'hidden'    
+    sync: |
+      `chflags nohidden ~/Library`
   when: osx_finder_show_user_library
   notify:
   - restart Finder
