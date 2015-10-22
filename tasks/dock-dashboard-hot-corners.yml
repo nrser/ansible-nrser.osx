@@ -187,6 +187,17 @@
 # # Bottom left screen corner → Start screen saver
 # defaults write com.apple.dock wvous-bl-corner -int 5
 # defaults write com.apple.dock wvous-bl-modifier -int 0
+- name: bottom right hot corner
+  state:
+    defaults:
+    - key: com.apple.dock:wvous-br-corner
+      set: "{{ osx_bottom_right_hot_corner }}"
+      type: int
+    - key: com.apple.dock:wvous-br-modifier
+      set: 0
+  when: osx_bottom_right_hot_corner is defined
+  notify:
+  - restart Dock
 
 # when switching to an application, whether to switch to a space with that
 # app open.

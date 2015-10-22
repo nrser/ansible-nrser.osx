@@ -21,13 +21,13 @@
       type: float
   when: osx_password_delay is defined
 
-- name: create ~/temp/screen-shots directory
+- name: create {{ osx_screen_shots_dir }} directory
   file:
     path: "{{ osx_screen_shots_dir }}"
     state: directory
   when: osx_screen_shots_dir is defined
 
-- name: Save screenshots to ~/temp/screen-shots
+- name: Save screenshots to {{ osx_screen_shots_dir }}
   state:
     defaults:
     # defaults write com.apple.screencapture location -string "${HOME}/temp/screen-shots"
@@ -35,7 +35,7 @@
       set: "{{ osx_screen_shots_dir }}"
   when: osx_screen_shots_dir is defined
 
-- name: "Save screenshots in PNG format (other options: BMP, GIF, JPG, PDF, TIFF)"
+- name: screen shot format
   state:
     defaults:
       # defaults write com.apple.screencapture type -string "png"
@@ -48,8 +48,9 @@
     defaults:
       # defaults write com.apple.screencapture disable-shadow -bool true
       key: com.apple.screencapture:disable-shadow
-      set: true
-  when: osx_disable_shadows_in_screen_shots
+      set: "{{ osx_disable_shadows_in_screen_shots }}"
+      type: bool
+  when: osx_disable_shadows_in_screen_shots is defined
 
 - name: Enable subpixel font rendering on non-Apple LCDs
   state:
@@ -57,25 +58,32 @@
       # defaults write NSGlobalDomain AppleFontSmoothing -int 2
       key: NSGlobalDomain:AppleFontSmoothing
       set: 2
-  when: osx_subpixel_fonts
+  when: osx_subpixel_fonts is defined and osx_subpixel_fonts
+  
+- name: Disable subpixel font rendering on non-Apple LCDs
+  state:
+    defaults:
+      # defaults write NSGlobalDomain AppleFontSmoothing -int 2
+      key: NSGlobalDomain:AppleFontSmoothing
+      unset: 
+  when: osx_subpixel_fonts is defined and not osx_subpixel_fonts
 
-- name: Enable HiDPI display modes (requires restart)
-  sudo: true
+- name: HiDPI display modes
   state:
     defaults:
       # sudo defaults write /Library/Preferences/com.apple.windowserver DisplayResolutionEnabled -bool true
       key: /Library/Preferences/com.apple.windowserver:DisplayResolutionEnabled
-      set: true
+      set: "{{ osx_hidpi }}"
+      type: int
   notify:
-  - requires restart
-  when: osx_enable_hidpi
+  - require restart
+  when: osx_hidpi is defined
 
-- name: start screen saver after 5 minutes
+- name: screen saver delay
   state:
     defaults:
       key: com.apple.screensaver:idleTime
       set: "{{ osx_screen_saver_delay }}"
       type: int
       current_host: true
-        
   when: osx_screen_saver_delay is defined

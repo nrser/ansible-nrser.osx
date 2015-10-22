@@ -136,41 +136,126 @@ osx_menu_bar_hide: []
 # screen.yml
 # ==========
 
-# osx_password_after_screen_saver:                          true
-# osx_password_delay:                                       5.0 # float in seconds
-# osx_screen_shots_dir:                                     "{{ lookup('env','HOME') }}/temp/screen-shots"
-# osx_screen_shot_format:                                   png
-osx_disable_shadows_in_screen_shots:                      off
-osx_subpixel_fonts:                                       off
-osx_enable_hidpi:                                         off
-# osx_screen_saver_delay:                                   300 # integer in seconds
+# [bool] require password after screen saver
+# osx_password_after_screen_saver: 
+
+# [float] delay in seconds after sleep or screen saver begins to ask
+# for password
+# osx_password_delay: 
+
+# [str] directory to save screenshots. will be created it if doesn't exist.
+# ex: "{{ lookup('env','HOME') }}/temp/screen-shots"
+# osx_screen_shots_dir: 
+
+# [png, bpm, gif, jpg, pdf, tiff] screen shot format 
+# osx_screen_shot_format: 
+
+# [bool] Disable shadow in screenshots
+# osx_disable_shadows_in_screen_shots: 
+
+# [bool] Enable subpixel font rendering on non-Apple LCDs
+# osx_subpixel_fonts: 
+
+# [bool] HiDPI display modes
+# osx_hidpi: 
+
+# [int] screen saver delay in seconds
+# osx_screen_saver_delay: 
+
 
 # finder.yml
 # ==========
 
-osx_finder_disable_animations:                            off
-osx_finder_default_to_home:                               off
-osx_finder_no_drives_on_desktop:                          off
-osx_finder_show_hidden_files:                             off
-osx_finder_show_file_extensions:                          off
-osx_finder_show_status_bar:                               off
-osx_finder_show_path_bar:                                 off
-osx_finder_selection_in_quick_look:                       off
-osx_finder_posix_path_as_title:                           off
-osx_finder_default_search_to_current_folder:              off
-osx_finder_disable_change_extension_warning:              off
-osx_finder_spring_load_dirs:                              off
-# osx_finder_spring_load_delay:                             0.5 # seconds as float
-osx_finder_no_ds_store_on_network_volumes:                off
-osx_finder_info_in_icon_views:                            off
-osx_finder_desktop_info_on_right:                         off
-osx_finder_icon_snap_to_grid:                             off
-# osx_finder_icon_spacing:                                  54 # integer
-# osx_finder_icon_size:                                     64 # integer
-osx_finder_list_view_default:                             off
-osx_finder_diable_empty_trash_warning:                    off
-osx_finder_show_user_library:                             off
-osx_finder_expand_file_info:                              off
+# [bool] Finder - disable window animations and Get Info animations
+# osx_finder_disable_animations: 
+
+# [bool] Set home as the default location for new Finder windows
+# osx_finder_default_to_home: 
+
+# [bool show icons for external hard drives on desktop
+# osx_external_drives_on_desktop: 
+
+# [bool] show internal hard drives on desktop
+# osx_internal_drives_on_desktop: 
+
+# [bool] show mounted servers on desktop
+# osx_mounted_servers_on_desktop: 
+
+# [bool] show hidden files by default
+# osx_show_hidden_files: 
+
+# [bool] show all filename extensions
+# osx_show_file_extensions: 
+
+# [bool] show status bar in Finder
+# osx_finder_show_status_bar: 
+
+# [bool] show path bar in Finder
+# osx_finder_show_path_bar: 
+
+# [bool] allow text selection in Quick Look
+# osx_text_selection_in_quick_look: 
+
+# [bool] Display full POSIX path as Finder window title
+# osx_finder_posix_path_as_title: 
+
+# [SCev, SCcf, SCsp] where to default finder search to:
+# -   everything (SCev)
+# -   current folder (SCcf)
+# -   previous scope (SCsp)
+# osx_finder_default_search: 
+
+# [bool] warn when changing a file extension
+# osx_finder_disable_change_extension_warning: 
+
+# [bool] spring loading for directories
+# osx_finder_spring_load_dirs: 
+
+# [float] Set spring loading delay for directories in seconds
+# osx_finder_spring_load_delay: 
+
+# [bool] Avoid creating .DS_Store files on network volumes
+# osx_no_ds_store_on_network_volumes: 
+
+# [bool] Disable disk image verification
+# osx_disable_disk_image_verification: 
+
+# [bool] Show item info to the right of the icons on the desktop
+# osx_finder_info_in_icon_views: 
+
+# [bool] Show item info below icons on desktop (vs on the right)
+# osx_finder_desktop_info_on_bottom: 
+
+# [none, grid] icons span to a grid or nothing (may be other options)
+# osx_finder_icon_snap_to: 
+
+# [int] set grid spacing for icons on the desktop and in other icon views
+# default: 54
+# mths: 100
+# osx_finder_icon_spacing: 
+
+# [int] set the size of icons on the desktop and in other icon views
+# osx_finder_icon_size: 
+
+# [Nlsv, icnv, clmv, Flwv] default view for finder windows
+# -   list view: Nlsv
+# osx_finder_default_view: 
+
+# [bool] warn before emptying the Trash
+# osx_trash_warning: 
+
+# [bool] Empty Trash securely by default
+# osx_empty_trash_securely: 
+
+# [bool] AirDrop over Ethernet and on unsupported Macs running Lion
+# osx_airdrop_over_ethernet: 
+
+# [bool] Show the ~/Library folder
+# osx_finder_show_user_library: 
+
+# set the File Info panes to expand
+osx_finder_expand_file_info: off
+
 
 # dock-dashboard-hot-corners.yml
 # ==============================
@@ -190,6 +275,10 @@ osx_dock_speed_up_mission_control:                        off
 # osx_dock_autohide:                                        false # boolean
 # osx_dock_hidden_apps_translucent:                         true # boolean
 # osx_disable_launchpad_gesture:                            true # boolean
+
+# [int] bottom right hot corner
+# osx_bottom_right_hot_corner:
+
 # osx_spaces_switch_on_activate:                            false # boolean
 
 # safari-webkit.yml

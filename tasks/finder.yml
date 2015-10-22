@@ -8,13 +8,14 @@
 #
 # this seems fucking pointless
 
-- name: "Finder: disable window animations and Get Info animations"
+- name: Finder - disable window animations and Get Info animations
   state:
     defaults:
       # defaults write com.apple.finder DisableAllAnimations -bool true
       key: com.apple.finder:DisableAllAnimations
-      set: true
-  when: osx_finder_disable_animations
+      set: "{{ osx_finder_disable_animations }}"
+      type: bool
+  when: osx_finder_disable_animations is defined
   notify:
   - restart Finder
 
@@ -28,76 +29,106 @@
     # defaults write com.apple.finder NewWindowTargetPath -string "file://localhost${HOME}/"
     - key: com.apple.finder:NewWindowTargetPath
       set: "file://localhost{{ lookup('env', 'HOME') }}/"
-  when: osx_finder_default_to_home
+  when: osx_finder_default_to_home is defined and osx_finder_default_to_home
   notify:
   - restart Finder
 
-- name: don't show icons for hard drives, servers, and removable media on the desktop
+- name: show icons for external hard drives on desktop
   state:
     defaults:
     # defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
     - key: com.apple.finder:ShowExternalHardDrivesOnDesktop
-      set: false
-    # defaults write com.apple.finder ShowHardDrivesOnDesktop -bool true
-    - key: com.apple.finder:ShowHardDrivesOnDesktop
-      set: false
-    # defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
-    - key: com.apple.finder:ShowMountedServersOnDesktop
-      set: false
-    # defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
-    - key: com.apple.finder:ShowRemovableMediaOnDesktop
-      set: false
+      set: "{{ osx_external_drives_on_desktop }}"
+      type: bool
   notify:
   - restart Finder
-  when: osx_finder_no_drives_on_desktop
+  when: osx_external_drives_on_desktop is defined
+    
+- name: show internal hard drives on desktop
+  state:
+    defaults:
+    # defaults write com.apple.finder ShowHardDrivesOnDesktop -bool true
+    - key: com.apple.finder:ShowHardDrivesOnDesktop
+      set: "{{ osx_internal_drives_on_desktop }}"
+      type: bool
+  notify:
+  - restart Finder
+  when: osx_internal_drives_on_desktop is defined
 
-- name: "Finder: show hidden files by default"
+- name: show mounted servers on desktop
+  state:
+    defaults:
+    # defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
+    - key: com.apple.finder:ShowMountedServersOnDesktop
+      set: "{{ osx_mounted_servers_on_desktop }}"
+      type: bool
+  notify:
+  - restart Finder
+  when: osx_mounted_servers_on_desktop is defined
+      
+- name: show removable media on desktop
+  state:
+    defaults:
+    # defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
+    - key: com.apple.finder:ShowRemovableMediaOnDesktop
+      set: "{{ osx_removable_media_on_desktop }}"
+      type: bool
+  notify:
+  - restart Finder
+  when: osx_removable_media_on_desktop is defined
+
+- name: show hidden files by default
   state:
     defaults:
       # defaults write com.apple.finder AppleShowAllFiles -bool true
       key: com.apple.finder:AppleShowAllFiles
-      set: true
-  when: osx_finder_show_hidden_files
+      set: "{{ show hidden files by default }}"
+      type: bool
+  when: osx_show_hidden_files is defined
   notify:
   - restart Finder
 
-- name: "Finder: show all filename extensions"
+- name: show all filename extensions
   state:
     defaults:
       # defaults write NSGlobalDomain AppleShowAllExtensions -bool true
       key: NSGlobalDomain:AppleShowAllExtensions
-      set: true
-  when: osx_finder_show_file_extensions
+      set: "{{ osx_show_file_extensions }}"
+      type: bool
+  when: osx_show_file_extensions is defined
   notify:
   - restart Finder
 
-- name: "Finder: show status bar"
+- name: show status bar in Finder
   state:
     defaults:
       # defaults write com.apple.finder ShowStatusBar -bool true
       key: com.apple.finder:ShowStatusBar
-      set: true
-  when: osx_finder_show_status_bar
+      set: "{{ osx_finder_show_status_bar }}"
+      type: bool
+  when: osx_finder_show_status_bar is defined
   notify:
   - restart Finder
 
-- name: "Finder: show path bar"
+- name: show path bar in Finder
   state:
     defaults:
       # defaults write com.apple.finder ShowPathbar -bool true
       key: com.apple.finder:ShowPathbar
-      set: true
-  when: osx_finder_show_path_bar
+      set: "{{ osx_finder_show_path_bar }}"
+      type: bool
+  when: osx_finder_show_path_bar is defined
   notify:
   - restart Finder
 
-- name: "Finder: allow text selection in Quick Look"
+- name: allow text selection in Quick Look
   state:
     defaults:
       # defaults write com.apple.finder QLEnableTextSelection -bool true
       key: com.apple.finder:QLEnableTextSelection
-      set: true
-  when: osx_finder_selection_in_quick_look
+      set: "{{ osx_text_selection_in_quick_look }}"
+      type: bool
+  when: osx_text_selection_in_quick_look is defined
   notify:
   - restart Finder
 
@@ -106,38 +137,53 @@
     defaults:
       # defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
       key: com.apple.finder:_FXShowPosixPathInTitle
-      set: true
-  when: osx_finder_posix_path_as_title
+      set: "{{ osx_finder_posix_path_as_title }}"
+      type: bool
+  when: osx_finder_posix_path_as_title is defined
   notify:
   - restart Finder
 
-- name: When performing a search, search the current folder by default
+- name: check osx_finder_default_search value
+  fail:
+    msg: >
+      `osx_finder_default_search` must be in
+      {{ OSX_FINDER_DEFAULT_SEARCH_VALUES }}, found 
+      {{ osx_finder_default_search|to_json }}
+  when: >
+    osx_finder_default_search is defined and
+    osx_finder_default_search not in OSX_FINDER_DEFAULT_SEARCH_VALUES
+
+- name: Finder default seach scope
   state:
     defaults:
       # defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
       key: com.apple.finder:FXDefaultSearchScope
-      set: SCcf
-  when: osx_finder_default_search_to_current_folder
+      set: "{{ osx_finder_default_search }}"
+  when: >
+    osx_finder_default_search is defined and
+    osx_finder_default_search in OSX_FINDER_DEFAULT_SEARCH_VALUES
   notify:
   - restart Finder
 
-- name: Disable the warning when changing a file extension
+- name: warn when changing a file extension
   state:
     defaults:
       # defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
       key: com.apple.finder:FXEnableExtensionChangeWarning
-      set: false
-  when: osx_finder_disable_change_extension_warning
+      set: "{{ osx_finder_change_extension_warning }}"
+      type: bool
+  when: osx_finder_change_extension_warning is defined
   notify:
   - restart Finder
 
-- name: Enable spring loading for directories
+- name: spring loading for directories
   state:
     defaults:
       # defaults write NSGlobalDomain com.apple.springing.enabled -bool true
       key: NSGlobalDomain:com.apple.springing.enabled
-      set: true
-  when: osx_finder_spring_load_dirs
+      set: "{{ spring loading for directories }}"
+      type: bool
+  when: osx_finder_spring_load_dirs is defined
   notify:
   - restart Finder
 
@@ -157,17 +203,29 @@
     defaults:
       # defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
       key: com.apple.desktopservices:DSDontWriteNetworkStores
-      set: true
-  when: osx_finder_no_ds_store_on_network_volumes
+      set: "{{ osx_no_ds_store_on_network_volumes }}"
+      type: bool
+  when: osx_no_ds_store_on_network_volumes is defined
   notify:
   - restart Finder
 
-# Disable disk image verification
-# defaults write com.apple.frameworks.diskimages skip-verify -bool true
-# defaults write com.apple.frameworks.diskimages skip-verify-locked -bool true
-# defaults write com.apple.frameworks.diskimages skip-verify-remote -bool true
-#
-# TODO: why?
+# NOTE untested
+- name: Disable disk image verification
+  state:
+    defaults:
+    # defaults write com.apple.frameworks.diskimages skip-verify -bool true
+    - key: com.apple.frameworks.diskimages:skip-verify
+      set: "{{ osx_disable_disk_image_verification }}"
+      type: bool
+    # defaults write com.apple.frameworks.diskimages skip-verify-locked -bool true
+    - key: com.apple.frameworks.diskimages:skip-verify-locked
+      set: "{{ osx_disable_disk_image_verification }}"
+      type: bool
+    # defaults write com.apple.frameworks.diskimages skip-verify-remote -bool true
+    - key: com.apple.frameworks.diskimages:skip-verify-remote
+      set: "{{ osx_disable_disk_image_verification }}"
+      type: bool
+  when: osx_disable_disk_image_verification is defined
 
 # Automatically open a new Finder window when a volume is mounted
 # defaults write com.apple.frameworks.diskimages auto-open-ro-root -bool true
@@ -188,26 +246,28 @@
     # /usr/libexec/PlistBuddy -c "Set :FK_StandardViewSettings:IconViewSettings:showItemInfo true" ~/Library/Preferences/com.apple.finder.plist
     # /usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:showItemInfo true" ~/Library/Preferences/com.apple.finder.plist
     - key: "com.apple.finder:{{ item }}:IconViewSettings:showItemInfo"
-      set: true
+      set: "{{ osx_finder_info_in_icon_views }}"
+      type: bool
   with_items:
   - DesktopViewSettings
   - FK_StandardViewSettings
   - StandardViewSettings
   notify:
   - restart Finder
-  when: osx_finder_info_in_icon_views
+  when: osx_finder_info_in_icon_views is defined
 
-- name: Show item info to the right of the icons on the desktop
+- name: Show item info below icons on the desktop
   state:
     defaults:
       # /usr/libexec/PlistBuddy -c "Set DesktopViewSettings:IconViewSettings:labelOnBottom false" ~/Library/Preferences/com.apple.finder.plist
       key: com.apple.finder:DesktopViewSettings:IconViewSettings:labelOnBottom
-      set: false
+      set: "{{ osx_finder_desktop_info_on_bottom }}"
+      type: bool
   notify:
   - restart Finder
-  when: osx_finder_desktop_info_on_right
+  when: osx_finder_desktop_info_on_bottom is defined
 
-- name: Enable snap-to-grid for icons on the desktop and in other icon views
+- name: set icon snap to
   state:
     defaults:
       # /usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist
@@ -215,14 +275,14 @@
       # /usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist
       key: "com.apple.finder:{{ item }}:IconViewSettings:arrangeBy"
       # default was 'none'
-      set: grid
+      set: "{{ osx_finder_icon_snap_to }}"
   with_items:
   - DesktopViewSettings
   - FK_StandardViewSettings
   - StandardViewSettings
   notify:
   - restart Finder
-  when: osx_finder_icon_snap_to_grid
+  when: osx_finder_icon_snap_to is defined
 
 - name: set grid spacing for icons on the desktop and in other icon views
   state:
@@ -231,8 +291,6 @@
       # /usr/libexec/PlistBuddy -c "Set :FK_StandardViewSettings:IconViewSettings:gridSpacing 100" ~/Library/Preferences/com.apple.finder.plist
       # /usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:gridSpacing 100" ~/Library/Preferences/com.apple.finder.plist
       key: "com.apple.finder:{{ item }}:IconViewSettings:gridSpacing"
-      # default: 54
-      # mths: 100
       set: "{{ osx_finder_icon_spacing }}"
       type: int
   with_items:
@@ -262,7 +320,17 @@
   - restart Finder
   when: osx_finder_icon_size is defined
 
-- name: Use list view in all Finder windows by default
+- name: check osx_finder_default_view value
+  fail:
+    msg: >
+      `osx_finder_default_view` must be in
+      {{ OSX_FINDER_DEFAULT_SEARCH_VALUES }}, found 
+      {{ osx_finder_default_view|to_json }}
+  when: > 
+    osx_finder_default_view is defined and
+    osx_finder_default_view not in OSX_FINDER_DEFAULT_VIEW_VALUES
+
+- name: default view for finder windows
   state:
     defaults:
       # defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
@@ -271,29 +339,40 @@
       set: Nlsv
   notify:
   - restart Finder
-  when: osx_finder_list_view_default
+  when: > 
+    osx_finder_default_view is defined and
+    osx_finder_default_view in OSX_FINDER_DEFAULT_VIEW_VALUES
 
-- name: Disable the warning before emptying the Trash
+- name: warn before emptying the Trash
   state:
     defaults:
       # defaults write com.apple.finder WarnOnEmptyTrash -bool false
       key: com.apple.finder:WarnOnEmptyTrash
-      set: false
-  when: osx_finder_diable_empty_trash_warning
+      set: "{{ osx_trash_warning }}"
+      type: bool
+  when: osx_trash_warning is defined
   notify:
   - restart Finder
 
-# Empty Trash securely by default
-# defaults write com.apple.finder EmptyTrashSecurely -bool true
-#
-# this can really slow things down, especially when trying to knock
-# out large media files to make emergency space
+- name: Empty Trash securely by default
+  state:
+    defaults:
+      # defaults write com.apple.finder EmptyTrashSecurely -bool true
+      key: com.apple.finder:EmptyTrashSecurely
+      set: "{{ osx_empty_trash_securely }}"
+      type: bool
+  when: osx_empty_trash_securely is defined
 
-# # Enable AirDrop over Ethernet and on unsupported Macs running Lion
-# defaults write com.apple.NetworkBrowser BrowseAllInterfaces -bool true
-#
-# not sure i care
+- name: AirDrop over Ethernet and on unsupported Macs running Lion
+  state:
+    defaults:
+      # defaults write com.apple.NetworkBrowser BrowseAllInterfaces -bool true
+      key: com.apple.NetworkBrowser:BrowseAllInterfaces
+      set: "{{ osx_airdrop_over_ethernet }}"
+      type: bool
+  when: osx_airdrop_over_ethernet is defined
 
+# TODO implement?
 # # Enable the MacBook Air SuperDrive on any Mac
 # sudo nvram boot-args="mbasd=1"
 #
@@ -305,17 +384,28 @@
       ! `ls -aOl ~/Library`.lines[1].include? 'hidden'    
     sync: |
       `chflags nohidden ~/Library`
-  when: osx_finder_show_user_library
+  when: >
+    osx_finder_show_user_library is defined and osx_finder_show_user_library
   notify:
   - restart Finder
 
+- name: hide the ~/Library folder
+  sync.rb:
+    in_sync?: |
+      `ls -aOl ~/Library`.lines[1].include? 'hidden'    
+    sync: |
+      `chflags hidden ~/Library`
+  when: > 
+    osx_finder_show_user_library is defined and
+    not osx_finder_show_user_library
+  notify:
+  - restart Finder
+
+# NOTE won't implement
 # Remove Dropbox’s green checkmark icons in Finder
 # file=/Applications/Dropbox.app/Contents/Resources/emblem-dropbox-uptodate.icns
 # [ -e "${file}" ] && mv -f "${file}" "${file}.bak"
-#
-# i like em!
 
-# TODO: ugh... deep comparisons needed to deal with the 0/1/true/false shit
 - name: set the File Info panes to expand
   state:
     defaults:

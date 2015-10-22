@@ -18,3 +18,14 @@ OSX_MENU_BAR_VALUES:
 - AirPort
 - Battery
 - Clock
+
+OSX_FINDER_DEFAULT_SEARCH_VALUES:
+- SCev
+- SCcf
+- SCsp
+
+OSX_FINDER_DEFAULT_VIEW_VALUES:
+- Nlsv
+- icnv
+- clmv
+- Flwv
