@@ -3,16 +3,17 @@
 # SSD-specific tweaks                                                         #
 ###############################################################################
 
-- name: Disable local Time Machine snapshots
-  # 
-  #     sudo tmutil disablelocal
-  #
-  state:
-    time_machine:
-      key: local_backups
-      set: false
-  sudo: true
-  when: osx_disable_time_machine
+# TODO implement
+# - name: Disable local Time Machine snapshots
+#   # 
+#   #     sudo tmutil disablelocal
+#   #
+#   state:
+#     time_machine:
+#       key: local_backups
+#       set: false
+#   sudo: true
+#   when: osx_disable_time_machine
 
 # Disable hibernation (speeds up entering sleep mode)
 # 

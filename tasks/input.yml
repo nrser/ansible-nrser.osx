@@ -37,6 +37,7 @@
   - require logout/login
   when: osx_trackpad_click_to_tap is defined
 
+# TODO implement
 # Trackpad: map bottom right corner to right-click
 # 
 #     defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadCornerSecondaryClick -int 2
@@ -44,19 +45,21 @@
 #     defaults -currentHost write NSGlobalDomain com.apple.trackpad.trackpadCornerClickBehavior -int 1
 #     defaults -currentHost write NSGlobalDomain com.apple.trackpad.enableSecondaryClick -bool true
 
+# TODO implement
 # Disable “natural” (Lion-style) scrolling
 # 
 #     defaults write NSGlobalDomain com.apple.swipescrolldirection -bool false
 
-- name: Increase sound quality for Bluetooth headphones/headsets
-  state:
-    defaults:
-    # 
-    #     defaults write com.apple.BluetoothAudioAgent "Apple Bitpool Min (editable)" -int 40
-    #
-      key: com.apple.BluetoothAudioAgent:Apple Bitpool Min (editable)
-      set: 40
-  when: osx_better_bluetooth_audio
+# TODO doesn't seem to exist on my system
+# - name: Increase sound quality for Bluetooth headphones/headsets
+#   state:
+#     defaults:
+#     # 
+#     #     defaults write com.apple.BluetoothAudioAgent "Apple Bitpool Min (editable)" -int 40
+#     #
+#       key: com.apple.BluetoothAudioAgent:Apple Bitpool Min (editable)
+#       set: 40
+#   when: osx_bluetooth_bitpool_min is defined
 
 - name: Enable full keyboard access for all controls
   # (e.g. enable Tab in modal dialogs)
@@ -67,18 +70,40 @@
       # 
       key: NSGlobalDomain:AppleKeyboardUIMode
       set: 3
-  when: osx_full_keyboard_access
+  when: osx_full_keyboard_access is defined and osx_full_keyboard_access
 
+- name: Enable full keyboard access for all controls
+  # (e.g. enable Tab in modal dialogs)
+  state:
+    defaults:
+      # 
+      #     defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
+      # 
+      key: NSGlobalDomain:AppleKeyboardUIMode
+      set: 3
+  when: osx_full_keyboard_access is defined and osx_full_keyboard_access
+  
+- name: Disable full keyboard access for all controls
+  state:
+    defaults:
+      key: NSGlobalDomain:AppleKeyboardUIMode
+      unset: 3
+  when: osx_full_keyboard_access is defined and not osx_full_keyboard_access
+
+# TODO implement
 # Use scroll gesture with the Ctrl (^) modifier key to zoom
 # defaults write com.apple.universalaccess closeViewScrollWheelToggle -bool true
 # defaults write com.apple.universalaccess HIDScrollZoomModifierMask -int 262144
 
+# TODO implement
 # Follow the keyboard focus while zoomed in
 # defaults write com.apple.universalaccess closeViewZoomFollowsFocus -bool true
 
+# TODO implement
 # Disable press-and-hold for keys in favor of key repeat
 # defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 
+# TODO implement
 # Set a blazingly fast keyboard repeat rate
 # defaults write NSGlobalDomain KeyRepeat -int 0
 
@@ -124,29 +149,32 @@
       set: "{{ osx_metric }}"
   when: osx_metric is defined
 
+# TODO implement
 # Set the timezone; see `sudo systemsetup -listtimezones` for other values
 # sudo systemsetup -settimezone "Europe/Brussels" > /dev/null
 # 
 # think i want this to be set automatically
 
+# TODO implement
 # Disable auto-correct
 # defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 # 
 # not sure if i want this... my spelling sucks
 
-- name: Stop iTunes from responding to the keyboard media keys
-  state:
-    launchd:
-      # 
-      #     launchctl unload -w /System/Library/LaunchAgents/com.apple.rcd.plist 2> /dev/null
-      #
-      key:
-      - /System/Library/LaunchAgents/com.apple.rcd.plist
-      - Disabled
-      set: true
-  # TODO: this fails if the item is not there?
-  # ignore_errors: true
-  when: osx_itunes_ignore_media_keys
+# TODO fix
+# - name: Stop iTunes from responding to the keyboard media keys
+#   state:
+#     launchd:
+#       # 
+#       #     launchctl unload -w /System/Library/LaunchAgents/com.apple.rcd.plist 2> /dev/null
+#       #
+#       key:
+#       - /System/Library/LaunchAgents/com.apple.rcd.plist
+#       - Disabled
+#       set: true
+#   # TODO: this fails if the item is not there?
+#   # ignore_errors: true
+#   when: osx_itunes_ignore_media_keys
 
 - name: include simplified chinese pinyin input
   state:
@@ -160,4 +188,18 @@
         array_contains:
           Bundle ID: com.apple.inputmethod.SCIM
           InputSourceKind: Keyboard Input Method
-  when: osx_simplified_pinyin
+  when: osx_simplified_pinyin is defined and osx_simplified_pinyin
+  
+- name: remove simplified chinese pinyin input
+  state:
+    defaults:
+      - key: com.apple.HIToolbox:AppleEnabledInputSources
+        array_missing:
+          Bundle ID: com.apple.inputmethod.SCIM
+          Input Mode: com.apple.inputmethod.SCIM.ITABC
+          InputSourceKind: Input Mode
+      - key: com.apple.HIToolbox:AppleEnabledInputSources
+        array_missing:
+          Bundle ID: com.apple.inputmethod.SCIM
+          InputSourceKind: Keyboard Input Method
+  when: osx_simplified_pinyin is defined and not osx_simplified_pinyin

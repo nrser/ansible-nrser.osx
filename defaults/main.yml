@@ -13,7 +13,7 @@
 # general-ui-ux.yml
 # =================
 
-# [string] Set computer name (as done via System Preferences → Sharing)
+# [str] Set computer name (as done via System Preferences → Sharing)
 # osx_computer_name: 
 
 # [int] set AC Power stand-by delay in seconds
@@ -90,33 +90,48 @@ osx_menu_bar_hide: []
 # [bool] smart dash substitution
 # osx_smart_dashes: 
 
-# [string] format date and time on menu bar
+# [str] format date and time on menu bar
 # example: EEE MMM d  HH:mm
 # osx_menu_bar_date_format: 
 
 # [bool] play sound feedback when volume is changed
 # osx_volume_feedback_sound: 
 
+
 # ssd.yml
 # =======
 
-osx_disable_time_machine:                                 off
 
 # input.yml
 # =========
 
-# osx_trackpad_click_to_tap:                                false # bool
-osx_better_bluetooth_audio:                               off
-osx_full_keyboard_access:                                 off
-# osx_languages:
+# [bool] Trackpad - enable tap to click for this user and for the login screen
+# osx_trackpad_click_to_tap: 
+
+# [bool] full keyboard access for all controls
+# (e.g. enable Tab in modal dialogs)
+# osx_full_keyboard_access: 
+
+# [array<str>] Set languages
+# ex:
 # - en
 # - zh-Hans
 # - zh-Hant
-# osx_locale:                                               en_US@currency=USD
-# osx_units:                                                Centimeters
-# osx_metric:                                               true
-osx_itunes_ignore_media_keys:                             off
-osx_simplified_pinyin:                                    off
+# osx_languages:
+
+# [str] set locale
+# ex: en_US@currency=USD
+# osx_locale: 
+
+# [Centimeters, Inches] set units
+# osx_units: 
+
+# [bool] use metric
+# osx_metric: 
+
+# [bool] include simplified pinyin input
+# osx_simplified_pinyin: 
+
 
 # screen.yml
 # ==========
