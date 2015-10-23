@@ -260,40 +260,141 @@ osx_finder_expand_file_info: off
 # dock-dashboard-hot-corners.yml
 # ==============================
 
-# osx_dock_hover_effect_in_grids:                            true # boolean
-# osx_dock_icon_size:                                       24 # integer
-# osx_dock_effect:                                          scale
-# osx_dock_min_to_app_icon:                                 true # boolean
-# osx_dock_spring_load_all:                                 true # boolean
-# osx_dock_app_indicator_lights:                            true # boolean
-# osx_dock_animate_opening_apps:                            false # boolean
-osx_dock_speed_up_mission_control:                        off
-# osx_dashboard_enabled:                                    true # boolean
-# osx_dashboard_as_space:                                   false # boolean
-# osx_dashboard_dev_mode:                                   false # boolean
-# osx_rearrange_spaces_by_use:                              false # boolean
-# osx_dock_autohide:                                        false # boolean
-# osx_dock_hidden_apps_translucent:                         true # boolean
-# osx_disable_launchpad_gesture:                            true # boolean
+# [bool] highlight hover effect for the grid view of a stack
+# osx_dock_hover_effect_in_grids: 
 
-# [int] bottom right hot corner
-# osx_bottom_right_hot_corner:
+# [float] icon size of Dock items
+# osx_dock_icon_size: 
 
-# osx_spaces_switch_on_activate:                            false # boolean
+# [scale, ?] minimize/maximize window effect
+# osx_dock_effect: 
+
+# [bool] minimize windows into app icons on Dock instead of to right tray
+# osx_dock_min_to_app_icon: 
+
+# [bool] spring loading for all Dock items
+# osx_dock_spring_load_all: 
+
+# [bool] show indicator lights for open applications in the Dock
+# osx_dock_app_indicator_lights: 
+
+# Wipe all app icons from the Dock
+osx_dock_no_persistent_apps: off
+
+# [bool] show open apps animation in Dock
+# osx_dock_animate_opening_apps: 
+
+# [float, false] set Mission Control animations speed (float) or unset (false)
+# .osx had at 0.1
+# osx_mission_control_animation_speed: 
+
+# [bool] group windows by application in Mission Control
+# (i.e. use the old Exposé behavior instead)
+# osx_mission_control_group_by_app: 
+
+# [off, space, overlay] Dashboard state
+# osx_dashboard_state: 
+
+# [bool] Dashboard dev mode (allows keeping widgets on the desktop)
+# osx_dashboard_dev_mode: 
+
+# [bool] automatically rearrange Spaces based on most recent use
+# osx_rearrange_spaces_by_use: 
+
+# [float, false] auto-hiding Dock delay. unsets when false.
+# osx_dock_autohide_delay: 
+
+# [float, false] animation speed when hiding/showing the Dock
+# unset when false. .osx uses 0
+# osx_autohide_time_modifier:
+
+# [bool] autohide Dock
+# osx_dock_autohide: 
+
+# [bool] Dock icons of hidden applications translucent
+# osx_dock_hidden_apps_translucent: 
+
+# [bool] Launchpad gesture (pinch with thumb and three fingers)
+# osx_launchpad_gesture: 
+
+# [dict] hot corners
+# keys:
+# 
+# -   top-right
+# -   top-left
+# -   bottom-left
+# -   bottom-right
+# 
+# values:
+# 
+# -   off
+# -   mission-control
+# -   app-windows
+# -   desktop
+# -   screen-saver
+# -   disable-screen-saver
+# -   dashboard
+# -   display-sleep
+# -   launchpad
+# -   nofit-center: 12
+# 
+osx_hot_corners: {}
+
+# [bool] Switch to space with app open when activating
+# osx_spaces_switch_on_activate: 
+
 
 # safari-webkit.yml
 # =================
 
-# osx_safari_full_url_in_addr_bar:                          true # boolean
-# osx_safari_home_page:                                     "about:blank" # string
-# osx_safari_auto_open_safe_files:                          false # boolean
-# osx_safari_backspace_back:                                false # boolean
-# osx_safari_show_favs_bar:                                 false # boolean
-osx_safari_disable_hist_top_sites_thumbs:                 off
-# osx_safari_enable_debug_menu:                             true # boolean
-osx_safari_remove_useless_bookmark_icons:                 off
-# osx_safari_dev_and_inspector_menus:                       true # boolean
-# osx_safari_inspector_context_menu:                        true # boolean
+# [bool] universal search (from url bar?) in Safari 
+# turned off in .osx for privacy reasons
+# osx_safari_universal_search: 
+
+# [bool] search suggestions in safari
+# turned off in .osx for privacy reasons
+# osx_safari_search_suggestions: 
+
+# [bool] Press Tab to highlight each item on a web page
+# osx_safari_tab_highlight_items: 
+
+# [bool] Show the full URL in the address bar
+# NOTE this still hides the scheme
+# osx_safari_full_url_in_address_bar: 
+
+# [about:blank, ?] Set Safari’s home page
+# osx_safari_home_page: 
+
+# [bool] open 'safe' files automatically after downloading in Safari
+# osx_safari_auto_open_safe_files: 
+
+# [bool] backspace key to go to the previous page in history
+# osx_safari_backspace_back: 
+
+# [bool] show Safari’s favorite (bookmarks) bar
+# osx_safari_show_favs_bar: 
+
+# [bool] show Safari’s sidebar in Top Sites
+# osx_safari_sidebar_in_top_sites: 
+
+# [bool] Disable Safari’s thumbnail cache for History and Top Sites
+# osx_safari_disable_hist_top_sites_thumbs: 
+
+# [bool] Enable Safari’s debug menu
+# osx_safari_enable_debug_menu: 
+
+# [bool] match only at word starts in Safari’s search banners
+# osx_safari_find_match_word_starts_only:
+
+# Remove useless icons from Safari’s bookmarks bar
+osx_safari_remove_useless_bookmark_icons: off
+
+# [bool] Enable the Develop menu and the Web Inspector in Safari
+# osx_safari_dev_and_inspector_menus: 
+
+# [bool] context menu item for showing the Web Inspector in web views
+# osx_safari_inspector_context_menu: 
+
 
 # mail.yml
 # ========

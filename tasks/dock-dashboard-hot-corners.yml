@@ -3,7 +3,7 @@
 # Dock, Dashboard, and hot corners                                            #
 ###############################################################################
 
-- name: set highlight hover effect for the grid view of a stack (Dock)
+- name: highlight hover effect for the grid view of a stack
   state:
     defaults:
       # defaults write com.apple.dock mouse-over-hilite-stack -bool true
@@ -12,8 +12,9 @@
       key: com.apple.dock:mouse-over-hilite-stack
       set: "{{ osx_hover_effect_in_dock_grids|bool }}"
   when: osx_dock_hover_effect_in_grids is defined
+  notify: restart Dock
 
-- name: Set the icon size of Dock items
+- name: icon size of Dock items
   state:
     defaults:
       # defaults write com.apple.dock tilesize -int 36
@@ -24,15 +25,16 @@
   notify:
   - restart Dock
 
-- name: set minimize/maximize window effect
+- name: minimize/maximize window effect
   state:
     defaults:
       # defaults write com.apple.dock mineffect -string "scale"
       key: com.apple.dock:mineffect
       set: "{{ osx_dock_effect }}" 
   when: osx_dock_effect is defined
+  notify: restart Dock
 
-- name: set window minimize style
+- name: minimize windows into app icons on Dock instead of to right tray
   state:
     defaults:
       # defaults write com.apple.dock minimize-to-application -bool true
@@ -40,8 +42,9 @@
       set: "{{ osx_min_to_app_icon }}"
       type: bool
   when: osx_dock_min_to_app_icon is defined
+  notify: restart Dock
 
-- name: set spring loading for all Dock items
+- name: spring loading for all Dock items
   state:
     defaults:
       # defaults write com.apple.dock enable-spring-load-actions-on-all-items -bool true
@@ -52,7 +55,7 @@
   notify:
   - restart Dock
 
-- name: set indicator lights for open applications in the Dock
+- name: show indicator lights for open applications in the Dock
   state:
     defaults:
       # defaults write com.apple.dock show-process-indicators -bool true
@@ -60,8 +63,20 @@
       set: "{{ osx_dock_app_indicator_lights }}"
       type: bool
   when: osx_dock_app_indicator_lights is defined
+  notify:
+  - restart Dock
 
-- name: set Dock open apps animation
+- name: Wipe all app icons from the Dock
+  state:
+    defaults:
+      # defaults write com.apple.dock persistent-apps -array
+      key: com.apple.dock:persistent-apps
+      set: []
+  when: osx_dock_no_persistent_apps
+  notify:
+  - restart Dock
+
+- name: show open apps animation in Dock
   state:
     defaults:
       # defaults write com.apple.dock launchanim -bool false
@@ -69,46 +84,40 @@
       set: "{{ osx_dock_animate_opening_apps }}"
       type: bool
   when: osx_dock_animate_opening_apps is defined
+  notify: restart Dock
 
-- name: Speed up Mission Control animations
+- name: set Mission Control animations speed
   state:
     defaults:
       # defaults write com.apple.dock expose-animation-duration -float 0.1
       key: com.apple.dock:expose-animation-duration
-      set: 0.1
-  when: osx_dock_speed_up_mission_control
-
-# Don’t group windows by application in Mission Control
-# (i.e. use the old Exposé behavior instead)
-# defaults write com.apple.dock expose-group-by-app -bool false
-# 
-# TODO: not sure what this is
-
-- name: enable Dashboard
-  state:
-    defaults:
-      key: com.apple.dashboard:mcx-disabled
-      unset:
+      set: "{{ osx_mission_control_animation_speed }}"
+      type: float
+      unset_when_false: true
+  when: >
+    osx_mission_control_animation_speed is defined
   notify: restart Dock
-  when: (osx_dashboard_enabled is defined) and (osx_dashboard_enabled)
 
-- name: disable Dashboard
+- name: group windows by application in Mission Control
   state:
     defaults:
-      key: com.apple.dashboard:mcx-disabled
-      set: true
-  notify: restart dock
-  when: (osx_dashboard_enabled is defined) and (not osx_dashboard_enabled)
-
-- name: set Dashboard as a Space
-  state:
-    defaults:
-      key: com.apple.dock:dashboard-in-overlay
-      set: "{{ not osx_dashboard_as_space }}"
+      # defaults write com.apple.dock expose-group-by-app -bool false
+      key: com.apple.dock:expose-group-by-app
+      set: "{{ osx_mission_control_group_by_app }}"
       type: bool
-  when: osx_dashboard_as_space is defined
+  when: osx_mission_control_group_by_app is defined
+  notify: restart Dock
 
-- name: set Dashboard dev mode (allows keeping widgets on the desktop)
+- name: set Dashboard state
+  state:
+    defaults:
+      key: com.apple.dashboard:enabled-state
+      set: "{{ OSX_DASHBOARD_STATES[osx_dashboard_state] }}"
+      type: int
+  when: osx_dashboard_state is defined
+  notify: restart Dock
+
+- name: Dashboard dev mode (allows keeping widgets on the desktop)
   state:
     defaults:
       # defaults write com.apple.dashboard devmode -bool true
@@ -116,38 +125,58 @@
       set: "{{ osx_dashboard_dev_mode }}"
       type: bool
   when: osx_dashboard_dev_mode is defined
+  notify: restart Dock
 
-- name: set automatically rearrange Spaces based on most recent use
+- name: automatically rearrange Spaces based on most recent use
   state:
     defaults:
       key: com.apple.dock:mru-spaces
       set: "{{ osx_rearrange_spaces_by_use }}"
       type: bool
   when: osx_rearrange_spaces_by_use is defined
+  notify: restart Dock
 
-# # Remove the auto-hiding Dock delay
-# defaults write com.apple.dock autohide-delay -float 0
-# # Remove the animation when hiding/showing the Dock
-# defaults write com.apple.dock autohide-time-modifier -float 0
+- name: auto-hiding Dock delay
+  state:
+    defaults:
+      # defaults write com.apple.dock autohide-delay -float 0
+      key: com.apple.dock:autohide-delay
+      set: "{{ osx_dock_autohide_delay }}"
+      type: float
+      unset_when_false: true
+  when: osx_dock_autohide_delay is defined
+  notify: restart Dock
 
-- name: set dock autohide
+- name: animation speed when hiding/showing the Dock
+  state:
+    defaults:
+      # defaults write com.apple.dock autohide-time-modifier -float 0
+      key: com.apple.dock:autohide-time-modifier
+      set: "{{ osx_autohide_time_modifier }}"
+      type: float
+      unset_when_false: true
+  when: osx_autohide_time_modifier is defined
+  notify: restart Dock
+
+- name: autohide Dock
   state:
     defaults:
       key: com.apple.dock:autohide
       set: "{{ osx_dock_autohide }}"
       type: bool
-  notify: restart dock
+  notify: restart Dock
   when: osx_dock_autohide is defined
 
-- name: set Dock icons of hidden applications translucent
+- name: Dock icons of hidden applications translucent
   state:
     defaults:
       key: com.apple.dock:showhidden
       set: "{{ osx_dock_hidden_apps_translucent }}"
       type: bool
   when: osx_dock_hidden_apps_translucent is defined
+  notify: restart Dock
 
-- name: Disable the Launchpad gesture (pinch with thumb and three fingers)
+- name: Launchpad gesture (pinch with thumb and three fingers)
   state:
     defaults:
       key: com.apple.dock:showLaunchpadGestureEnabled
@@ -187,25 +216,18 @@
 # # Bottom left screen corner → Start screen saver
 # defaults write com.apple.dock wvous-bl-corner -int 5
 # defaults write com.apple.dock wvous-bl-modifier -int 0
-- name: bottom right hot corner
+
+- name: hot corners
   state:
     defaults:
-    - key: com.apple.dock:wvous-br-corner
-      set: "{{ osx_bottom_right_hot_corner }}"
+    - key: com.apple.dock:{{ HOT_CORNERS[item.key].corner }}
+      set: "{{ HOT_CORNER_VALUES[item.value] }}"
       type: int
-    - key: com.apple.dock:wvous-br-modifier
+    - key: com.apple.dock:{{ HOT_CORNERS[item.key].modifier }}
       set: 0
-  when: osx_bottom_right_hot_corner is defined
-  notify:
-  - restart Dock
+  with_dict: osx_hot_corners
+  notify: restart Dock
 
-# when switching to an application, whether to switch to a space with that
-# app open.
-# 
-# @see http://hints.macworld.com/article.php?story=20071027195419540
-# 
-# TODO does not seem to take immediate effect
-# 
 - name: Switch to space with app open when activating
   state:
     defaults:
@@ -213,5 +235,4 @@
       set: "{{ osx_spaces_switch_on_activate }}"
       type: bool
   when: osx_spaces_switch_on_activate is defined
-  notify:
-  - restart Dock
+  notify: restart Dock

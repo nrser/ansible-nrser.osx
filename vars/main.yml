@@ -29,3 +29,34 @@ OSX_FINDER_DEFAULT_VIEW_VALUES:
 - icnv
 - clmv
 - Flwv
+
+OSX_DASHBOARD_STATES:
+  off: 1
+  space: 2
+  overlay: 3
+
+HOT_CORNERS:
+  top-left:
+    corner: wvous-tl-corner
+    modifier: wvous-tl-modifier
+  top-right:
+    corner: wvous-tr-corner
+    modifier: wvous-tr-modifier
+  bottom-left:
+    corner: wvous-bl-corner
+    modifier: wvous-bl-modifier
+  bottom-right:
+    corner: wvous-br-corner
+    modifier: wvous-br-modifier
+
+HOT_CORNER_VALUES:
+  off: 0
+  mission-control: 2
+  app-windows: 3
+  desktop: 4
+  screen-saver: 5
+  disable-screen-saver: 6
+  dashboard: 7
+  display-sleep: 10
+  launchpad: 11
+  nofit-center: 12

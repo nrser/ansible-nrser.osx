@@ -3,23 +3,44 @@
 # Safari & WebKit                                                             #
 ###############################################################################
 
-# i don't really use safari...
+- name: universal search (from url bar?) in Safari 
+  state:
+    defaults:
+      # defaults write com.apple.Safari UniversalSearchEnabled -bool false
+      key: com.apple.Safari:UniversalSearchEnabled
+      set: "{{ osx_safari_universal_search }}"
+      type: bool
+  when: osx_safari_universal_search is defined
 
-# # Privacy: don’t send search queries to Apple
-# defaults write com.apple.Safari UniversalSearchEnabled -bool false
-# defaults write com.apple.Safari SuppressSearchSuggestions -bool true
+- name: search suggestions in safari
+  state:
+    defaults:
+      # defaults write com.apple.Safari SuppressSearchSuggestions -bool true
+      key: com.apple.Safari:SuppressSearchSuggestions
+      set: "{{ not osx_safari_search_suggestions }}"
+      type: bool
+  when: osx_safari_search_suggestions is defined
 
-# # Press Tab to highlight each item on a web page
-# defaults write com.apple.Safari WebKitTabToLinksPreferenceKey -bool true
-# defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2TabsToLinks -bool true
+- name: Press Tab to highlight each item on a web page
+  state:
+    defaults:
+      # defaults write com.apple.Safari WebKitTabToLinksPreferenceKey -bool true
+      - key: com.apple.Safari:WebKitTabToLinksPreferenceKey
+        set: "{{ osx_safari_tab_highlight_items }}"
+        type: bool
+      # defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2TabsToLinks -bool true
+      - key: com.apple.Safari:com.apple.Safari.ContentPageGroupIdentifier.WebKit2TabsToLinks
+        set: "{{ osx_safari_tab_highlight_items }}"
+        type: bool
+  when: osx_safari_tab_highlight_items is defined
 
 - name: Show the full URL in the address bar
-  # note: this still hides the scheme
   state:
     defaults:
       key: com.apple.Safari:ShowFullURLInSmartSearchField
-      set: "{{ osx_safari_full_url_in_addr_bar|bool }}"
-  when: osx_safari_full_url_in_addr_bar is defined
+      set: "{{ osx_safari_full_url_in_address_bar }}"
+      type: bool
+  when: osx_safari_full_url_in_address_bar is defined
 
 - name: Set Safari’s home page to `about:blank` for faster loading
   state:
@@ -28,47 +49,64 @@
       set: "{{ osx_safari_home_page }}"
   when: osx_safari_home_page is defined
 
-- name: Prevent Safari from opening 'safe' files automatically after downloading
+- name: open 'safe' files automatically after downloading in Safari
   state:
     defaults:
       key: com.apple.Safari:AutoOpenSafeDownloads
-      set: "{{ osx_safari_auto_open_safe_files|bool }}"
+      set: "{{ osx_safari_auto_open_safe_files }}"
+      type: bool
   when: osx_safari_auto_open_safe_files is defined
 
-- name: Disable hitting the Backspace key to go to the previous page in history
-  # (i don't like backspace-as-back)
+- name: backspace key to go to the previous page in history
   state:
     defaults:
       key: com.apple.Safari:com.apple.Safari.ContentPageGroupIdentifier.WebKit2BackspaceKeyNavigationEnabled
-      set: "{{ osx_safari_backspace_back|bool }}"
+      set: "{{ osx_safari_backspace_back }}"
+      type: bool
   when: osx_safari_backspace_back is defined
 
-- name: Hide Safari’s bookmarks bar by default
+- name: show Safari’s favorite (bookmarks) bar
   state:
     defaults:
       key: com.apple.Safari:ShowFavoritesBar
-      set: "{{ osx_safari_show_favs_bar|bool }}"
+      set: "{{ osx_safari_show_favs_bar }}"
+      type: bool
   when: osx_safari_show_favs_bar is defined
 
-# # Hide Safari’s sidebar in Top Sites
-# defaults write com.apple.Safari ShowSidebarInTopSites -bool false
+- name: show Safari’s sidebar in Top Sites
+  when: osx_safari_sidebar_in_top_sites is defined
+  state:
+    defaults:
+      # defaults write com.apple.Safari ShowSidebarInTopSites -bool false
+      key: com.apple.Safari:ShowSidebarInTopSites
+      set: "{{ osx_safari_sidebar_in_top_sites }}"
+      type: bool
 
 - name: Disable Safari’s thumbnail cache for History and Top Sites
   state:
     defaults:
       key: com.apple.Safari:DebugSnapshotsUpdatePolicy
       set: 2
-  when: osx_safari_disable_hist_top_sites_thumbs
+      # seems to come unset, so unset when false
+      unset_when_false: true
+  when: osx_safari_disable_hist_top_sites_thumbs is defined
 
 - name: Enable Safari’s debug menu
   state:
     defaults:
       key: com.apple.Safari:IncludeInternalDebugMenu
-      set: "{{ osx_safari_enable_debug_menu|bool }}"
+      set: "{{ osx_safari_enable_debug_menu }}"
+      type: bool
   when: osx_safari_enable_debug_menu is defined
 
-# # Make Safari’s search banners default to Contains instead of Starts With
-# defaults write com.apple.Safari FindOnPageMatchesWordStartsOnly -bool false
+- name: match only at word starts in Safari’s search banners
+  when: osx_safari_find_match_word_starts_only is defined
+  state:
+    defaults:
+      # defaults write com.apple.Safari FindOnPageMatchesWordStartsOnly -bool false
+      key: com.apple.Safari:FindOnPageMatchesWordStartsOnly
+      set: "{{ osx_safari_find_match_word_starts_only }}"
+      type: bool
 
 - name: Remove useless icons from Safari’s bookmarks bar
   state:
@@ -81,16 +119,20 @@
   state:
     defaults:
     - key: com.apple.Safari:IncludeDevelopMenu
-      set: "{{ osx_safari_dev_and_inspector_menus|bool }}"
+      set: "{{ osx_safari_dev_and_inspector_menus }}"
+      type: bool
     - key: com.apple.Safari:WebKitDeveloperExtrasEnabledPreferenceKey
-      set: "{{ osx_safari_dev_and_inspector_menus|bool }}"
+      set: "{{ osx_safari_dev_and_inspector_menus }}"
+      type: bool
     - key: com.apple.Safari:com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled
-      set: "{{ osx_safari_dev_and_inspector_menus|bool }}"
+      set: "{{ osx_safari_dev_and_inspector_menus }}"
+      type: bool
   when: osx_safari_dev_and_inspector_menus is defined
 
 - name: Add a context menu item for showing the Web Inspector in web views
   state:
     defaults:
       key: NSGlobalDomain:WebKitDeveloperExtras
-      set: "{{ osx_safari_inspector_context_menu|bool }}"
+      set: "{{ osx_safari_inspector_context_menu }}"
+      type: bool
   when: osx_safari_inspector_context_menu is defined
