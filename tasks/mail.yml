@@ -3,15 +3,47 @@
 # # Mail                                                                        #
 # ###############################################################################
 
-# # Disable send and reply animations in Mail.app
-# defaults write com.apple.mail DisableReplyAnimations -bool true
-# defaults write com.apple.mail DisableSendAnimations -bool true
+- name: send animations in Mail.app
+  when: osx_mail_send_animations is defined
+  state:
+    defaults:
+      # defaults write com.apple.mail DisableSendAnimations -bool true
+      key: com.apple.mail:DisableSendAnimations
+      set: "{{ not osx_mail_send_animations }}"
+      type: bool
 
-# # Copy email addresses as `foo@example.com` instead of `Foo Bar <foo@example.com>` in Mail.app
-# defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
+- name: reply animations in Mail.app
+  when: osx_mail_reply_animations is defined
+  state:
+    defaults:
+      # defaults write com.apple.mail DisableReplyAnimations -bool true
+      key: com.apple.mail:DisableReplyAnimations
+      set: "{{ not osx_mail_send_animations }}"
+      type: bool
 
-# # Add the keyboard shortcut ⌘ + Enter to send an email in Mail.app
-# defaults write com.apple.mail NSUserKeyEquivalents -dict-add "Send" -string "@\\U21a9"
+- name: include name when copying emails addresses in Mail.app
+  when: osx_mail_include_name_when_copying_email_addresses is defined
+  state:
+    defaults: 
+      # defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
+      key: com.apple.mail:AddressesIncludeNameOnPasteboard
+      set: "{{ osx_mail_include_name_when_copying_email_addresses }}"
+      type: bool
+
+- name: Mail.app send shortcut
+  when: osx_mail_send_shortcut is defined
+  debug:
+    msg: "{{ osx_mail_send_shortcut|osx_hotkey }}"
+
+# - name: keyboard shortcut ⌘ + Enter to send an email in Mail.app
+#   when: osx_mail_cmd_enter_send is defined
+#   state:
+#     defaults:
+#       # defaults write com.apple.mail NSUserKeyEquivalents -dict-add "Send" -string "@\\U21a9"
+#       key: com.apple.mail:NSUserKeyEquivalents:Send
+#       set: '@\\U21a9'
+#       create: true
+#       unset_when: "{{ osx_mail_cmd_enter_send is sameas false }}"
 
 # # Display emails in threaded mode, sorted by date (oldest at the top)
 # defaults write com.apple.mail DraftsViewerAttributes -dict-add "DisplayInThreadedMode" -string "yes"

@@ -399,7 +399,19 @@ osx_safari_remove_useless_bookmark_icons: off
 # mail.yml
 # ========
 
-# i don't use mail
+# [bool] send animations in Mail.app
+# osx_mail_send_animations: 
+
+# [bool] reply animations in Mail.app
+# osx_mail_reply_animations: 
+
+# [bool] include name when copying emails addresses in Mail.app
+# osx_mail_include_name_when_copying_email_addresses:
+
+# [bool] keyboard shortcut ⌘ + Enter to send an email in Mail.app
+# `false` will remove the shortcut.
+# ex: [cmd, enter]
+# osx_mail_send_shortcut: 
 
 # spotlight.yml
 # =============

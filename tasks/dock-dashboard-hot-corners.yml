@@ -220,10 +220,10 @@
 - name: hot corners
   state:
     defaults:
-    - key: com.apple.dock:{{ HOT_CORNERS[item.key].corner }}
-      set: "{{ HOT_CORNER_VALUES[item.value] }}"
+    - key: com.apple.dock:{{ OSX_HOT_CORNERS[item.key].corner }}
+      set: "{{ OSX_HOT_CORNERS_VALUES[item.value] }}"
       type: int
-    - key: com.apple.dock:{{ HOT_CORNERS[item.key].modifier }}
+    - key: com.apple.dock:{{ OSX_HOT_CORNERS[item.key].modifier }}
       set: 0
   with_dict: osx_hot_corners
   notify: restart Dock

@@ -35,7 +35,7 @@ OSX_DASHBOARD_STATES:
   space: 2
   overlay: 3
 
-HOT_CORNERS:
+OSX_HOT_CORNERS:
   top-left:
     corner: wvous-tl-corner
     modifier: wvous-tl-modifier
@@ -49,7 +49,7 @@ HOT_CORNERS:
     corner: wvous-br-corner
     modifier: wvous-br-modifier
 
-HOT_CORNER_VALUES:
+OSX_HOT_CORNERS_VALUES:
   off: 0
   mission-control: 2
   app-windows: 3
@@ -60,3 +60,15 @@ HOT_CORNER_VALUES:
   display-sleep: 10
   launchpad: 11
   nofit-center: 12
+
+OSX_SHORTCUTS:
+  cmd: '@'
+  command: '@'
+  opt: '~'
+  option: '~'
+  shift: '$'
+  ctrl: '^'
+  control: '^'
+  enter: '\\U21a9' # ↩
+  return: '\U21a9' # ↩
+  right-arrow: "\\U2192" # →
