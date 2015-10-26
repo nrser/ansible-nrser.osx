@@ -6,7 +6,7 @@
 - name: Trackpad - enable tap to click for this user and for the login screen
   state:
     defaults:
-      # 
+      #
       #     defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
       #
       - key: com.apple.driver.AppleBluetoothMultitouch.trackpad:Clicking
@@ -14,16 +14,16 @@
         type: bool
       #
       #     defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
-      # 
+      #
       - key: NSGlobalDomain:com.apple.mouse.tapBehavior
         set: "{{ osx_trackpad_click_to_tap }}"
         type: int
         current_host: true
-      # 
+      #
       #     defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
       #
       # NOTE doesn't show up in plistener, not sure if needed
-      # 
+      #
       - key: NSGlobalDomain:com.apple.mouse.tapBehavior
         set: "{{ osx_trackpad_click_to_tap }}"
         type: int
@@ -39,7 +39,7 @@
 
 # TODO implement
 # Trackpad: map bottom right corner to right-click
-# 
+#
 #     defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadCornerSecondaryClick -int 2
 #     defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadRightClick -bool true
 #     defaults -currentHost write NSGlobalDomain com.apple.trackpad.trackpadCornerClickBehavior -int 1
@@ -47,14 +47,14 @@
 
 # TODO implement
 # Disable “natural” (Lion-style) scrolling
-# 
+#
 #     defaults write NSGlobalDomain com.apple.swipescrolldirection -bool false
 
 # TODO doesn't seem to exist on my system
 # - name: Increase sound quality for Bluetooth headphones/headsets
 #   state:
 #     defaults:
-#     # 
+#     #
 #     #     defaults write com.apple.BluetoothAudioAgent "Apple Bitpool Min (editable)" -int 40
 #     #
 #       key: com.apple.BluetoothAudioAgent:Apple Bitpool Min (editable)
@@ -65,9 +65,9 @@
   # (e.g. enable Tab in modal dialogs)
   state:
     defaults:
-      # 
+      #
       #     defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
-      # 
+      #
       key: NSGlobalDomain:AppleKeyboardUIMode
       set: 3
   when: osx_full_keyboard_access is defined and osx_full_keyboard_access
@@ -76,13 +76,13 @@
   # (e.g. enable Tab in modal dialogs)
   state:
     defaults:
-      # 
+      #
       #     defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
-      # 
+      #
       key: NSGlobalDomain:AppleKeyboardUIMode
       set: 3
   when: osx_full_keyboard_access is defined and osx_full_keyboard_access
-  
+
 - name: Disable full keyboard access for all controls
   state:
     defaults:
@@ -114,7 +114,7 @@
     defaults:
       #
       #     defaults write NSGlobalDomain AppleLanguages -array "en" "nl"
-      # 
+      #
       key: NSGlobalDomain:AppleLanguages
       set: "{{ osx_languages }}"
   when: osx_languages is defined
@@ -125,16 +125,16 @@
   #
   state:
     defaults:
-      key: NSGlobalDomain:AppleLocale 
+      key: NSGlobalDomain:AppleLocale
       set: "{{ osx_locale }}"
   when: osx_locale is defined
 
 - name: set units
   state:
     defaults:
-    # 
+    #
     #     defaults write NSGlobalDomain AppleMeasurementUnits -string "Centimeters"
-    # 
+    #
       key: NSGlobalDomain:AppleMeasurementUnits
       set: "{{ osx_units }}"
   when: osx_units is defined
@@ -142,9 +142,9 @@
 - name: set metric
   state:
     defaults:
-    # 
+    #
     #     defaults write NSGlobalDomain AppleMetricUnits -bool true
-    # 
+    #
       key: NSGlobalDomain:AppleMetricUnits
       set: "{{ osx_metric }}"
   when: osx_metric is defined
@@ -152,20 +152,20 @@
 # TODO implement
 # Set the timezone; see `sudo systemsetup -listtimezones` for other values
 # sudo systemsetup -settimezone "Europe/Brussels" > /dev/null
-# 
+#
 # think i want this to be set automatically
 
 # TODO implement
 # Disable auto-correct
 # defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
-# 
+#
 # not sure if i want this... my spelling sucks
 
 # TODO fix
 # - name: Stop iTunes from responding to the keyboard media keys
 #   state:
 #     launchd:
-#       # 
+#       #
 #       #     launchctl unload -w /System/Library/LaunchAgents/com.apple.rcd.plist 2> /dev/null
 #       #
 #       key:
@@ -184,12 +184,16 @@
           Bundle ID: com.apple.inputmethod.SCIM
           Input Mode: com.apple.inputmethod.SCIM.ITABC
           InputSourceKind: Input Mode
+        # might not exist
+        create: true
       - key: com.apple.HIToolbox:AppleEnabledInputSources
         array_contains:
           Bundle ID: com.apple.inputmethod.SCIM
           InputSourceKind: Keyboard Input Method
+        # might not exist
+        create: true
   when: osx_simplified_pinyin is defined and osx_simplified_pinyin
-  
+
 - name: remove simplified chinese pinyin input
   state:
     defaults:
