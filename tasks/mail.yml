@@ -24,17 +24,20 @@
 - name: include name when copying emails addresses in Mail.app
   when: osx_mail_include_name_when_copying_email_addresses is defined
   state:
-    defaults: 
+    defaults:
       # defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
       key: com.apple.mail:AddressesIncludeNameOnPasteboard
       set: "{{ osx_mail_include_name_when_copying_email_addresses }}"
       type: bool
 
-- name: Mail.app send shortcut
-  when: osx_mail_send_shortcut is defined
-  debug:
-    msg: "{{ osx_mail_send_shortcut|osx_hotkey }}"
+# - name: Mail.app send shortcut
+#   when: osx_mail_send_shortcut is defined
+#   debug:
+#     msg: "{{ osx_mail_send_shortcut|osx_hotkey }}"
 
+# TODO this *may* have been what broke the system prefs keyboard pane
+# (requiring me to re-install OSX)
+#
 # - name: keyboard shortcut ⌘ + Enter to send an email in Mail.app
 #   when: osx_mail_cmd_enter_send is defined
 #   state:
@@ -45,13 +48,48 @@
 #       create: true
 #       unset_when: "{{ osx_mail_cmd_enter_send is sameas false }}"
 
-# # Display emails in threaded mode, sorted by date (oldest at the top)
-# defaults write com.apple.mail DraftsViewerAttributes -dict-add "DisplayInThreadedMode" -string "yes"
-# defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortedDescending" -string "yes"
-# defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortOrder" -string "received-date"
+- name: Display in threaded mode in Mail.app
+  when: osx_mail_threaded_mode is defined
+  state:
+    defaults:
+      # defaults write com.apple.mail DraftsViewerAttributes -dict-add "DisplayInThreadedMode" -string "yes"
+      key: com.apple.mail:DraftsViewerAttributes:DisplayInThreadedMode
+      set: "yes"
+      type: string
+      unset_when: "{{ osx_mail_threaded_mode is sameas false }}"
 
-# # Disable inline attachments (just show the icons)
-# defaults write com.apple.mail DisableInlineAttachmentViewing -bool true
+- name: sort descending in Mail.app
+  when: osx_mail_sort_descending is defined
+  state:
+    defaults:
+      # defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortedDescending" -string "yes"
+      key: com.apple.mail:DraftsViewerAttributes:SortedDescending
+      set: "yes"
+      type: string
+      unset_when_false: true
 
-# # Disable automatic spell checking
-# defaults write com.apple.mail SpellCheckingBehavior -string "NoSpellCheckingEnabled"
+- name: sort order in Mail.app
+  when: osx_mail_sort_order is defined
+  state:
+    defaults:
+      # defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortOrder" -string "received-date"
+      key: com.apple.mail:DraftsViewerAttributes:SortOrder
+      set: "{{ osx_mail_sort_order }}"
+      unset_when_false: true
+
+- name: Disable inline attachments (just show the icons) in Mail.app
+  when: osx_mail_disable_inline_attachments is defined
+  state:
+    # defaults write com.apple.mail DisableInlineAttachmentViewing -bool true
+    key: com.apple.mail:DisableInlineAttachmentViewing
+    set: true
+    unset_when_false: true
+
+- name: Disable automatic spell checking in Mail.app
+  when: osx_mail_spell_checking_behavior is defined
+  state:
+    defaults:
+      # defaults write com.apple.mail SpellCheckingBehavior -string "NoSpellCheckingEnabled"
+      key: com.apple.mail:SpellCheckingBehavior
+      set: "{{ osx_mail_spell_checking_behavior }}"
+      unset_when_false: true
