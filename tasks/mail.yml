@@ -66,7 +66,7 @@
       key: com.apple.mail:DraftsViewerAttributes:SortedDescending
       set: "yes"
       type: string
-      unset_when_false: true
+      unset_when: "{{ osx_mail_sort_descending is sameas false }}"
 
 - name: sort order in Mail.app
   when: osx_mail_sort_order is defined
@@ -82,10 +82,11 @@
   state:
     # defaults write com.apple.mail DisableInlineAttachmentViewing -bool true
     key: com.apple.mail:DisableInlineAttachmentViewing
-    set: true
+    set: "{{ osx_mail_disable_inline_attachments }}"
+    type: bool
     unset_when_false: true
 
-- name: Disable automatic spell checking in Mail.app
+- name: spell checking behavior in Mail.app
   when: osx_mail_spell_checking_behavior is defined
   state:
     defaults:

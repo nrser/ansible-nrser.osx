@@ -1,8 +1,8 @@
 ---
 # defaults file for nrser.osx
-# 
+#
 # these variables control which tasks actually get run
-# 
+#
 # everything here is turned off or not defined
 # they can then be customized through variables
 #
@@ -14,23 +14,23 @@
 # =================
 
 # [str] Set computer name (as done via System Preferences → Sharing)
-# osx_computer_name: 
+# osx_computer_name:
 
 # [int] set AC Power stand-by delay in seconds
-# osx_ac_standbydelay: 
+# osx_ac_standbydelay:
 
 # [int] set Batter Power stand-by delay
-# osx_batt_standbydelay: 
+# osx_batt_standbydelay:
 
 # TODO does not work
 # Disable the sound effects on boot
 osx_disable_boot_sounds: off
 
 # [bool] play UI sounds
-# osx_ui_sounds: 
+# osx_ui_sounds:
 
 # [bool]  Disable transparency in the menu bar and elsewhere on Yosemite
-# osx_reduce_transparency: 
+# osx_reduce_transparency:
 
 # [TimeMachine, Volume, User, Bluetooth, AirPort, Battery, Clock]
 # items to show in the menu bar
@@ -41,61 +41,61 @@ osx_menu_bar_show: []
 osx_menu_bar_hide: []
 
 # [WhenScrolling, Automatic, Always] show scrollbars
-# osx_show_scroll_bars: 
+# osx_show_scroll_bars:
 
 # [float] window resize speed for Cocoa applications
 # .osx uses 0.001
-# osx_window_resize_speed: 
+# osx_window_resize_speed:
 
 # [bool] Expand save panel by default
-# osx_expand_save_panel: 
+# osx_expand_save_panel:
 
 # [bool] Expand print panel by default
-# osx_expand_print_panel: 
+# osx_expand_print_panel:
 
 # [bool] Save to iCloud by default
-# osx_default_save_to_icloud: 
+# osx_default_save_to_icloud:
 
 # [bool] Automatically quit printer app once the print jobs complete
-# osx_quit_print_app_when_finished: 
+# osx_quit_print_app_when_finished:
 
 # [bool] the "Are you sure you want to open this application?" dialog
-# osx_app_quarantine: 
+# osx_app_quarantine:
 
-# [bool] Display ASCII control characters using caret notation in standard 
+# [bool] Display ASCII control characters using caret notation in standard
 # text views
-# osx_control_characters_as_carets: 
+# osx_control_characters_as_carets:
 
 # [bool] Resume ("Reopen Windows When Logging Back In" option)
-# osx_resume: 
+# osx_resume:
 
 # [bool] Disable automatic termination of inactive apps
-# osx_disable_app_auto_terminate: 
+# osx_disable_app_auto_terminate:
 
 # [bool] enable or disable the crash reporter
-# osx_crash_reporter: 
+# osx_crash_reporter:
 
 # [bool] Set Help Viewer windows to non-floating mode
-# osx_non_floating_help_windows: 
+# osx_non_floating_help_windows:
 
 # [bool] show host info when clicking the clock in login window
-# osx_host_info_in_login_window: 
+# osx_host_info_in_login_window:
 
 # [int] set frequency to check for software udpates in days
-# osx_update_check_frequency: 
+# osx_update_check_frequency:
 
 # [bool] smart quote substitution
-# osx_smart_quotes: 
+# osx_smart_quotes:
 
 # [bool] smart dash substitution
-# osx_smart_dashes: 
+# osx_smart_dashes:
 
 # [str] format date and time on menu bar
 # example: EEE MMM d  HH:mm
-# osx_menu_bar_date_format: 
+# osx_menu_bar_date_format:
 
 # [bool] play sound feedback when volume is changed
-# osx_volume_feedback_sound: 
+# osx_volume_feedback_sound:
 
 
 # ssd.yml
@@ -106,11 +106,11 @@ osx_menu_bar_hide: []
 # =========
 
 # [bool] Trackpad - enable tap to click for this user and for the login screen
-# osx_trackpad_click_to_tap: 
+# osx_trackpad_click_to_tap:
 
 # [bool] full keyboard access for all controls
 # (e.g. enable Tab in modal dialogs)
-# osx_full_keyboard_access: 
+# osx_full_keyboard_access:
 
 # [array<str>] Set languages
 # ex:
@@ -121,137 +121,137 @@ osx_menu_bar_hide: []
 
 # [str] set locale
 # ex: en_US@currency=USD
-# osx_locale: 
+# osx_locale:
 
 # [Centimeters, Inches] set units
-# osx_units: 
+# osx_units:
 
 # [bool] use metric
-# osx_metric: 
+# osx_metric:
 
 # [bool] include simplified pinyin input
-# osx_simplified_pinyin: 
+# osx_simplified_pinyin:
 
 
 # screen.yml
 # ==========
 
 # [bool] require password after screen saver
-# osx_password_after_screen_saver: 
+# osx_password_after_screen_saver:
 
 # [float] delay in seconds after sleep or screen saver begins to ask
 # for password
-# osx_password_delay: 
+# osx_password_delay:
 
 # [str] directory to save screenshots. will be created it if doesn't exist.
 # ex: "{{ lookup('env','HOME') }}/temp/screen-shots"
-# osx_screen_shots_dir: 
+# osx_screen_shots_dir:
 
-# [png, bpm, gif, jpg, pdf, tiff] screen shot format 
-# osx_screen_shot_format: 
+# [png, bpm, gif, jpg, pdf, tiff] screen shot format
+# osx_screen_shot_format:
 
 # [bool] Disable shadow in screenshots
-# osx_disable_shadows_in_screen_shots: 
+# osx_disable_shadows_in_screen_shots:
 
 # [bool] Enable subpixel font rendering on non-Apple LCDs
-# osx_subpixel_fonts: 
+# osx_subpixel_fonts:
 
 # [bool] HiDPI display modes
-# osx_hidpi: 
+# osx_hidpi:
 
 # [int] screen saver delay in seconds
-# osx_screen_saver_delay: 
+# osx_screen_saver_delay:
 
 
 # finder.yml
 # ==========
 
 # [bool] Finder - disable window animations and Get Info animations
-# osx_finder_disable_animations: 
+# osx_finder_disable_animations:
 
 # [bool] Set home as the default location for new Finder windows
-# osx_finder_default_to_home: 
+# osx_finder_default_to_home:
 
 # [bool show icons for external hard drives on desktop
-# osx_external_drives_on_desktop: 
+# osx_external_drives_on_desktop:
 
 # [bool] show internal hard drives on desktop
-# osx_internal_drives_on_desktop: 
+# osx_internal_drives_on_desktop:
 
 # [bool] show mounted servers on desktop
-# osx_mounted_servers_on_desktop: 
+# osx_mounted_servers_on_desktop:
 
 # [bool] show hidden files by default
-# osx_show_hidden_files: 
+# osx_show_hidden_files:
 
 # [bool] show all filename extensions
-# osx_show_file_extensions: 
+# osx_show_file_extensions:
 
 # [bool] show status bar in Finder
-# osx_finder_show_status_bar: 
+# osx_finder_show_status_bar:
 
 # [bool] show path bar in Finder
-# osx_finder_show_path_bar: 
+# osx_finder_show_path_bar:
 
 # [bool] allow text selection in Quick Look
-# osx_text_selection_in_quick_look: 
+# osx_text_selection_in_quick_look:
 
 # [bool] Display full POSIX path as Finder window title
-# osx_finder_posix_path_as_title: 
+# osx_finder_posix_path_as_title:
 
 # [SCev, SCcf, SCsp] where to default finder search to:
 # -   everything (SCev)
 # -   current folder (SCcf)
 # -   previous scope (SCsp)
-# osx_finder_default_search: 
+# osx_finder_default_search:
 
 # [bool] warn when changing a file extension
-# osx_finder_change_extension_warning: 
+# osx_finder_change_extension_warning:
 
 # [bool] spring loading for directories
-# osx_finder_spring_load_dirs: 
+# osx_finder_spring_load_dirs:
 
 # [float] Set spring loading delay for directories in seconds
-# osx_finder_spring_load_delay: 
+# osx_finder_spring_load_delay:
 
 # [bool] Avoid creating .DS_Store files on network volumes
-# osx_no_ds_store_on_network_volumes: 
+# osx_no_ds_store_on_network_volumes:
 
 # [bool] Disable disk image verification
-# osx_disable_disk_image_verification: 
+# osx_disable_disk_image_verification:
 
 # [bool] Show item info to the right of the icons on the desktop
-# osx_finder_info_in_icon_views: 
+# osx_finder_info_in_icon_views:
 
 # [bool] Show item info below icons on desktop (vs on the right)
-# osx_finder_desktop_info_on_bottom: 
+# osx_finder_desktop_info_on_bottom:
 
 # [none, grid] icons span to a grid or nothing (may be other options)
-# osx_finder_icon_snap_to: 
+# osx_finder_icon_snap_to:
 
 # [int] set grid spacing for icons on the desktop and in other icon views
 # default: 54
 # mths: 100
-# osx_finder_icon_spacing: 
+# osx_finder_icon_spacing:
 
 # [int] set the size of icons on the desktop and in other icon views
-# osx_finder_icon_size: 
+# osx_finder_icon_size:
 
 # [Nlsv, icnv, clmv, Flwv] default view for finder windows
 # -   list view: Nlsv
-# osx_finder_default_view: 
+# osx_finder_default_view:
 
 # [bool] warn before emptying the Trash
-# osx_trash_warning: 
+# osx_trash_warning:
 
 # [bool] Empty Trash securely by default
-# osx_empty_trash_securely: 
+# osx_empty_trash_securely:
 
 # [bool] AirDrop over Ethernet and on unsupported Macs running Lion
-# osx_airdrop_over_ethernet: 
+# osx_airdrop_over_ethernet:
 
 # [bool] Show the ~/Library folder
-# osx_finder_show_user_library: 
+# osx_finder_show_user_library:
 
 # set the File Info panes to expand
 osx_finder_expand_file_info: off
@@ -261,72 +261,72 @@ osx_finder_expand_file_info: off
 # ==============================
 
 # [bool] highlight hover effect for the grid view of a stack
-# osx_dock_hover_effect_in_grids: 
+# osx_dock_hover_effect_in_grids:
 
 # [float] icon size of Dock items
-# osx_dock_icon_size: 
+# osx_dock_icon_size:
 
 # [scale, ?] minimize/maximize window effect
-# osx_dock_effect: 
+# osx_dock_effect:
 
 # [bool] minimize windows into app icons on Dock instead of to right tray
-# osx_dock_min_to_app_icon: 
+# osx_dock_min_to_app_icon:
 
 # [bool] spring loading for all Dock items
-# osx_dock_spring_load_all: 
+# osx_dock_spring_load_all:
 
 # [bool] show indicator lights for open applications in the Dock
-# osx_dock_app_indicator_lights: 
+# osx_dock_app_indicator_lights:
 
 # Wipe all app icons from the Dock
 osx_dock_no_persistent_apps: off
 
 # [bool] show open apps animation in Dock
-# osx_dock_animate_opening_apps: 
+# osx_dock_animate_opening_apps:
 
 # [float, false] set Mission Control animations speed (float) or unset (false)
 # .osx had at 0.1
-# osx_mission_control_animation_speed: 
+# osx_mission_control_animation_speed:
 
 # [bool] group windows by application in Mission Control
 # (i.e. use the old Exposé behavior instead)
-# osx_mission_control_group_by_app: 
+# osx_mission_control_group_by_app:
 
 # [off, space, overlay] Dashboard state
-# osx_dashboard_state: 
+# osx_dashboard_state:
 
 # [bool] Dashboard dev mode (allows keeping widgets on the desktop)
-# osx_dashboard_dev_mode: 
+# osx_dashboard_dev_mode:
 
 # [bool] automatically rearrange Spaces based on most recent use
-# osx_rearrange_spaces_by_use: 
+# osx_rearrange_spaces_by_use:
 
 # [float, false] auto-hiding Dock delay. unsets when false.
-# osx_dock_autohide_delay: 
+# osx_dock_autohide_delay:
 
 # [float, false] animation speed when hiding/showing the Dock
 # unset when false. .osx uses 0
 # osx_autohide_time_modifier:
 
 # [bool] autohide Dock
-# osx_dock_autohide: 
+# osx_dock_autohide:
 
 # [bool] Dock icons of hidden applications translucent
-# osx_dock_hidden_apps_translucent: 
+# osx_dock_hidden_apps_translucent:
 
 # [bool] Launchpad gesture (pinch with thumb and three fingers)
-# osx_launchpad_gesture: 
+# osx_launchpad_gesture:
 
 # [dict] hot corners
 # keys:
-# 
+#
 # -   top-right
 # -   top-left
 # -   bottom-left
 # -   bottom-right
-# 
+#
 # values:
-# 
+#
 # -   off
 # -   mission-control
 # -   app-windows
@@ -337,51 +337,51 @@ osx_dock_no_persistent_apps: off
 # -   display-sleep
 # -   launchpad
 # -   nofit-center: 12
-# 
+#
 osx_hot_corners: {}
 
 # [bool] Switch to space with app open when activating
-# osx_spaces_switch_on_activate: 
+# osx_spaces_switch_on_activate:
 
 
 # safari-webkit.yml
 # =================
 
-# [bool] universal search (from url bar?) in Safari 
+# [bool] universal search (from url bar?) in Safari
 # turned off in .osx for privacy reasons
-# osx_safari_universal_search: 
+# osx_safari_universal_search:
 
 # [bool] search suggestions in safari
 # turned off in .osx for privacy reasons
-# osx_safari_search_suggestions: 
+# osx_safari_search_suggestions:
 
 # [bool] Press Tab to highlight each item on a web page
-# osx_safari_tab_highlight_items: 
+# osx_safari_tab_highlight_items:
 
 # [bool] Show the full URL in the address bar
 # NOTE this still hides the scheme
-# osx_safari_full_url_in_address_bar: 
+# osx_safari_full_url_in_address_bar:
 
 # [about:blank, ?] Set Safari’s home page
-# osx_safari_home_page: 
+# osx_safari_home_page:
 
 # [bool] open 'safe' files automatically after downloading in Safari
-# osx_safari_auto_open_safe_files: 
+# osx_safari_auto_open_safe_files:
 
 # [bool] backspace key to go to the previous page in history
-# osx_safari_backspace_back: 
+# osx_safari_backspace_back:
 
 # [bool] show Safari’s favorite (bookmarks) bar
-# osx_safari_show_favs_bar: 
+# osx_safari_show_favs_bar:
 
 # [bool] show Safari’s sidebar in Top Sites
-# osx_safari_sidebar_in_top_sites: 
+# osx_safari_sidebar_in_top_sites:
 
 # [bool] Disable Safari’s thumbnail cache for History and Top Sites
-# osx_safari_disable_hist_top_sites_thumbs: 
+# osx_safari_disable_hist_top_sites_thumbs:
 
 # [bool] Enable Safari’s debug menu
-# osx_safari_enable_debug_menu: 
+# osx_safari_enable_debug_menu:
 
 # [bool] match only at word starts in Safari’s search banners
 # osx_safari_find_match_word_starts_only:
@@ -390,20 +390,20 @@ osx_hot_corners: {}
 osx_safari_remove_useless_bookmark_icons: off
 
 # [bool] Enable the Develop menu and the Web Inspector in Safari
-# osx_safari_dev_and_inspector_menus: 
+# osx_safari_dev_and_inspector_menus:
 
 # [bool] context menu item for showing the Web Inspector in web views
-# osx_safari_inspector_context_menu: 
+# osx_safari_inspector_context_menu:
 
 
 # mail.yml
 # ========
 
 # [bool] send animations in Mail.app
-# osx_mail_send_animations: 
+# osx_mail_send_animations:
 
 # [bool] reply animations in Mail.app
-# osx_mail_reply_animations: 
+# osx_mail_reply_animations:
 
 # [bool] include name when copying emails addresses in Mail.app
 # osx_mail_include_name_when_copying_email_addresses:
@@ -411,7 +411,27 @@ osx_safari_remove_useless_bookmark_icons: off
 # [bool] keyboard shortcut ⌘ + Enter to send an email in Mail.app
 # `false` will remove the shortcut.
 # ex: [cmd, enter]
-# osx_mail_send_shortcut: 
+# osx_mail_send_shortcut:
+
+# [bool] Display in threaded mode in Mail.app
+# `false` will unset
+# osx_mail_threaded_mode:
+
+# [bool] sort descending in Mail.app
+# `false` will unset
+# osx_mail_sort_descending:
+
+# [received-date, ?, false] sort order in Mail.app
+# `false` will unset
+# osx_mail_sort_order:
+
+# [bool] Disable inline attachments (just show the icons) in Mail.app
+# `false` will unset
+# osx_mail_disable_inline_attachments:
+
+# [NoSpellCheckingEnabled, ?, false] Disable automatic spell checking in
+# Mail.app. `false` will unset
+# osx_mail_spell_checking_behavior: 
 
 # spotlight.yml
 # =============
