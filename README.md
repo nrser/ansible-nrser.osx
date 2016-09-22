@@ -32,7 +32,7 @@ Dependencies
 ------------
 
 -   [nrser.state_mate](https://github.com/nrser/ansible-nrser.state_mate)
--   [nrser.sync.rb](https://github.com/nrser/ansible-nrser.sync.rb)
+-   [nrser.rb](https://github.com/nrser/ansible-nrser.rb)
 
 Example Playbook
 ----------------
